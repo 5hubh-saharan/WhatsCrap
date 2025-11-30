@@ -121,7 +121,6 @@ Feedback and suggestions through Issues are welcome.
 
 ## 📜 License
 This repository uses GitHub’s default public license.  
-To add your own license later, consider MIT, Apache 2.0, or GPL.
 
 ---
 
