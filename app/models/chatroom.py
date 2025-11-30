@@ -13,4 +13,4 @@ class ChatRoom(Base):
     name: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
     created_at: Mapped[datetime] = mapped_column(TIMESTAMP, server_default=func.now())
 
-    messages: Mapped[list["Message"]] = relationship(back_populates="room")
+    messages: Mapped[list["Message"]] = relationship(back_populates="room") # pyright: ignore[reportUndefinedVariable]

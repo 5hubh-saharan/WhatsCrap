@@ -13,4 +13,4 @@ class User(Base):
     password: Mapped[str] = mapped_column(String, nullable=False)
     created_at: Mapped[datetime] = mapped_column(TIMESTAMP, server_default=func.now())
 
-    messages: Mapped[list["Message"]] = relationship(back_populates="user")
+    messages: Mapped[list["Message"]] = relationship(back_populates="user") # pyright: ignore[reportUndefinedVariable]
