@@ -1,1 +1,14 @@
+# Python cache
+**/__pycache__/
+*.pyc
+
+# Environments
 .env
+
+# VS Code
+.vscode/
+
+# Bytecode
+*.pyo
+*.pyd
+*.pyd
