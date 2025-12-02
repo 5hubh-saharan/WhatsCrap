@@ -18,7 +18,7 @@ async def create_user(db: AsyncSession, username: str, password: str) -> User:
 async def authenticate_user(db: AsyncSession, username: str, password: str) -> User | None:
     statement = select(User).where(User.username == username)
     result = await db.execute(statement)
-    user = result.scalar().first()
+    user = result.scalars().first()
 
     if user and verify_password(password, user.password):
         return user
