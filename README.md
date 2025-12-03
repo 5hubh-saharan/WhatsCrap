@@ -1,4 +1,5 @@
 # 🗨️ WhatsCrap
+It's crap. But it's ours.
 
 A real-time chat application built with **FastAPI**, **WebSockets**, **SQLAlchemy (async)**, **Alembic**, and **PostgreSQL**, fully containerized with **Docker** and deployed on **Render**.
 
