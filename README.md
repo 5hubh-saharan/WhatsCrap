@@ -1,139 +1,189 @@
-# 💬 WhatsCrap
-A modern, lightweight chat application built with **FastAPI**, **Neon PostgreSQL**, **WebSockets**, and **HTML/CSS**.
+🚀 WhatsCrap — Real-Time Chat Application
 
-WhatsCrap is a learning project designed to explore:
-- Backend development with FastAPI
-- Session-based authentication (Flask-style)
-- WebSocket real-time communication
-- Database modeling with async SQLAlchemy
-- Clean folder structure and modular architecture
+A full-stack, production-ready chat application built with FastAPI, WebSockets, Async SQLAlchemy, Alembic, Neon PostgreSQL, and Docker, deployed on Render.
 
-> ⚠️ This project is in early development.  
-> Only the initial folder structure and setup are complete — core features are being implemented.
+WhatsCrap allows users to register, log in, create chat rooms, and exchange real-time messages that persist in a database.
 
----
+🌟 Features
+🔐 Authentication
 
-## 🚀 Features (Planned)
-- 🔐 Username + Password authentication (session cookies)
-- 💬 Multiple chat rooms (like Discord channels)
-- 🧵 Real-time messaging over WebSockets
-- 🗄️ Chat history stored in database (with per-room limit)
-- 🎨 Simple HTML/CSS interface (no frameworks)
-- 🧰 Fully asynchronous backend using async SQLAlchemy
-- 🗂️ Clean project structure (routers, services, models, templates)
-- 🐳 Docker support (planned)
+User registration & login
 
----
+Secure password hashing (SHA256 + bcrypt)
 
-## 🏗️ Technology Stack
+Session-based authentication using cookies
 
-### **Backend**
-- FastAPI
-- Starlette (Session middleware, WebSocket handling)
-- SQLAlchemy (async)
-- asyncpg (PostgreSQL driver)
-- passlib[bcrypt] (password hashing)
+💬 Real-Time Chat
 
-### **Database**
-- Neon PostgreSQL (cloud-hosted, serverless)
+WebSocket-powered messaging
 
-### **Frontend**
-- Jinja2 Templates
-- HTML5 / CSS3
-- Vanilla JavaScript (only for WebSocket events)
+Multiple chat rooms
 
-### **Tools**
-- Alembic (migrations)
-- Uvicorn (ASGI server)
-- python-dotenv (environment config)
+Broadcast messages instantly to all connected users
 
----
+View message history from the database
 
-## 📁 Project Structure
+🗄️ Database & Migrations
 
-WhatsCrap/
-└── app/
-├── main.py
-├── config.py
+PostgreSQL (Neon) as main database
+
+Async SQLAlchemy ORM
+
+Full Alembic migration system
+
+Automatically creates tables on deploy via Docker
+
+🌐 Deployment
+
+Fully Dockerized
+
+Production-ready server (Uvicorn)
+
+Auto-migrates on deploy:
+
+alembic upgrade head && uvicorn app.main:app
+
+📦 Tech Stack
+Backend
+
+FastAPI
+
+Starlette Sessions
+
+SQLAlchemy 2.0 (async)
+
+Alembic
+
+asyncpg
+
+Passlib (bcrypt)
+
+Frontend
+
+Jinja2 templates
+
+HTML/CSS
+
+Vanilla JS (WebSocket client)
+
+Deployment
+
+Docker
+
+Render Web Services
+
+Neon PostgreSQL
+
+📁 Project Structure
+app/
+│
+├── main.py                # FastAPI application setup
+├── config.py              # Settings from .env (Pydantic)
+│
 ├── database/
-├── models/
-├── schemas/
-├── routers/
-├── services/
-├── utils/
+│   ├── base.py            # Declarative Base
+│   ├── session.py         # Async engine + session
+│
+├── models/                # SQLAlchemy ORM models
+│   ├── user.py
+│   ├── chatroom.py
+│   └── message.py
+│
+├── schemas/               # Pydantic schemas
+│
+├── routers/               # FastAPI route handlers
+│   ├── auth.py
+│   └── chat.py
+│
+├── services/              # Business logic
+│   ├── auth_service.py
+│   └── chat_service.py
+│
 ├── websocket/
-├── templates/
-└── static/
+│   ├── chatws.py          # WebSocket endpoint
+│   └── manager.py         # Connection manager
+│
+├── templates/             # HTML templates (Jinja2)
+│
+└── static/                # CSS / JS files
 
+🛠️ Running Locally
+1. Clone the repo
+git clone https://github.com/5hubh-saharan/WhatsCrap.git
+cd WhatsCrap
 
-This modular layout keeps the project clean and scalable as more features are added.
+2. Set up a virtual environment
+python -m venv venv
+venv\Scripts\activate   # Windows
+# or source venv/bin/activate on Linux/Mac
 
----
-
-## ⚙️ Setup (WIP)
-Once development progresses, setup instructions will include:
-
+3. Install dependencies
 pip install -r requirements.txt
+
+4. Add your .env
+DATABASE_URL=postgresql+asyncpg://...
+SECRET_KEY=your-secret-key
+
+5. Run database migrations
+alembic upgrade head
+
+6. Start the app
 uvicorn app.main:app --reload
 
+🐳 Running with Docker (Production)
 
-Database configuration will be stored in your `.env` file.
+Build:
 
----
+docker build -t whatscrap .
 
-## 📚 Current Progress
-- [x] Folder structure created  
-- [x] Basic wiring planned (authentication, chat logic, WebSockets)
-- [ ] Implement authentication system  
-- [ ] Implement chat room database models  
-- [ ] Implement WebSocket manager  
-- [ ] Render chat UI  
-- [ ] Docker deployment setup  
 
----
+Run:
 
-## 🧑‍💻 Purpose of This Project
-WhatsCrap is built as part of a personal learning initiative to understand:
+docker run -p 8000:8000 --env-file .env whatscrap
 
-- Backend architecture  
-- Real-time communication  
-- Web application security  
-- Industry-standard code organization  
-- Cloud database integration  
+🔄 Deployment to Render
 
-This is not intended for production use (yet).
+The service automatically runs:
 
----
+alembic upgrade head
+uvicorn app.main:app --host 0.0.0.0 --port 8000
 
-## 🛑 Legal Disclaimer
-**WhatsCrap is an educational project.**  
-It is **not affiliated with, endorsed by, or connected to WhatsApp™ or Meta™ in any way.**  
-The name “WhatsCrap” is a parody and is used for academic and personal learning purposes only.  
-All trademarks and copyrights remain the property of their respective owners.
 
----
+This ensures:
 
-## 🤝 Contributing
-Since this is a personal learning project, contributions are currently closed.  
-Feedback and suggestions through Issues are welcome.
+DB tables always exist
 
----
+Migrations run before app starts
 
-## 📜 License
-This repository uses GitHub’s default public license.  
+🚧 Future Improvements
 
----
+Planned features:
 
-## ⭐ Acknowledgments
-- The FastAPI documentation  
-- SQLAlchemy async tutorials  
-- Neon documentation for PostgreSQL  
-- Chat app design inspirations (Discord, Slack)
+Private messaging (DMs)
 
----
+User online/offline indicators
 
-## 📝 Roadmap
-A more detailed roadmap will be added once core features are implemented.
+Typing indicators
 
-Stay tuned!
+Message timestamps formatting
 
+Profile pictures
+
+Responsive UI redesign
+
+Push notifications
+
+👤 Author
+
+Shubhkarman Saharan
+Backend Developer | FastAPI Enthusiast
+
+❤️ Acknowledgements
+
+FastAPI for the backend framework
+
+Neon.tech for free cloud PostgreSQL
+
+Render.com for hosting
+
+SQLAlchemy & Alembic for database tooling
