@@ -196,6 +196,11 @@ This ensures:
 
 Backend Developer | FastAPI Enthusiast
 
+
+**Linsheng Zhang**
+
+Frontend Developer | FastAPI Enthusiast
+
 ---
 
 ## ❤️ Acknowledgements
