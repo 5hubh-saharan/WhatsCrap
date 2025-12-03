@@ -1,7 +1,8 @@
-from fastapi import FastAPI, Depends, Request
+from fastapi import FastAPI
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import RedirectResponse
 
 from app.config import settings
 from app.routers import auth, chat
@@ -29,5 +30,5 @@ app.include_router(chatws.router)
 
 
 @app.get("/")
-async def home(request: Request, user_id: str = Depends(login_required)):
-    return templates.TemplateResponse("rooms.html", {"request": request})
+async def home():
+    return RedirectResponse("/chat/rooms", status_code=302)

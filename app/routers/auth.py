@@ -48,7 +48,8 @@ async def login_user(
     user = await authenticate_user(db, login_data.username, login_data.password)
 
     if not user:
-        return templates.TemplateResponse("login.html", {"request": Request, "error": "Invalid username or password"})
+        return templates.TemplateResponse("login.html",{"request": request, "error": "Invalid username or password"})
+
     
     request.session["user_id"] = str(user.id)
     return RedirectResponse(url="/", status_code=302)
