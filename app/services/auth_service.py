@@ -10,7 +10,7 @@ async def create_user(db: AsyncSession, username: str, password: str) -> User:
 
     db.add(user)
     await db.commit()
-    await db.refresh()
+    await db.refresh(user)
 
     return user
 
