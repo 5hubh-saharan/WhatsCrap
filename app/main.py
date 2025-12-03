@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends, Request
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from app.config import settings
 from app.routers import auth, chat
@@ -17,6 +18,9 @@ app.add_middleware(
     secret_key=settings.SECRET_KEY,
     session_cookie="session_id",
 )
+
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
+
 
 app.include_router(auth.router)
 app.include_router(chat.router)

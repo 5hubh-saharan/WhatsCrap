@@ -1,22 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
 <h2>Create a New Chat Room</h2>
 
-<form action="/chat/create-room" method="post">
+<form action="/chat/create-room" method="post" class="form-box">
     <input type="text" name="name" placeholder="Room Name" required>
     <button type="submit">Create Room</button>
 </form>
+
+{% if error %}
+    <p class="error">{{ error }}</p>
+{% endif %}
 
 <hr>
 
 <h2>Available Rooms</h2>
 
-{% if error %}
-    <p style="color:red;">{{ error }}</p>
-{% endif %}
-
-<ul>
+<ul class="room-list">
     {% for room in rooms %}
         <li>
             <a href="/chat/room/{{ room.id }}">{{ room.name }}</a>
         </li>
+    {% else %}
+        <p>No rooms created yet.</p>
     {% endfor %}
 </ul>
+
+{% endblock %}
