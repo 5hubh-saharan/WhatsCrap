@@ -1,0 +1,18 @@
+<h2>Chat Room: {{ room.name }}</h2>
+
+<hr>
+
+<h3>Messages:</h3>
+<ul>
+    {% for message in messages %}
+        <li><strong>{{ message.user.username }}</strong>: {{ message.content }}</li>
+    {% endfor %}
+</ul>
+
+<hr>
+
+<h3>Send a Message</h3>
+<form action="/chat/send-message/{{ room.id }}" method="post">
+    <input type="text" name="content" placeholder="Write your message..." required>
+    <button type="submit">Send</button>
+</form>

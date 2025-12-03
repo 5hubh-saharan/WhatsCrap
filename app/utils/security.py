@@ -5,8 +5,8 @@ from fastapi.responses import RedirectResponse
 
 
 pwd_context = CryptContext(
-    schemas = ["bcrypt"],
-    depricated = "auto"
+    schemes=["bcrypt"],
+    deprecated="auto",
 )
 
 
@@ -20,8 +20,11 @@ def verify_password(plain_password: str, hashed_password: str) -> str:
 
 def login_required(request: Request):
     user_id = request.session.get("user_id")
-
     if not user_id:
-        raise HTTPException(status_code=302, detail="Redirect", headers={"Location": "/auth/login"})
-
+        raise HTTPException(
+            status_code=302,
+            detail="Redirect to login",
+            headers={"Location": "/auth/login"},
+        )
     return user_id
+

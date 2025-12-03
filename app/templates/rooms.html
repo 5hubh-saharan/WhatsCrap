@@ -8,14 +8,15 @@
 <hr>
 
 <h2>Available Rooms</h2>
+
+{% if error %}
+    <p style="color:red;">{{ error }}</p>
+{% endif %}
+
 <ul>
     {% for room in rooms %}
         <li>
             <a href="/chat/room/{{ room.id }}">{{ room.name }}</a>
         </li>
     {% endfor %}
-    {% if error %}
-        <p style="color:red;">{{ error }}</p>
-    {% endif %}
-
 </ul>
