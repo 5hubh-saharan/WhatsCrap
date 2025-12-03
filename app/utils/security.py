@@ -1,5 +1,5 @@
 from passlib.context import CryptContext
-
+import hashlib
 from fastapi import Request, HTTPException
 from fastapi.responses import RedirectResponse
 
@@ -11,11 +11,15 @@ pwd_context = CryptContext(
 
 
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    sha = hashlib.sha256(password.encode("utf-8")).hexdigest()
+    return pwd_context.hash(sha)
 
 
-def verify_password(plain_password: str, hashed_password: str) -> str:
-    return pwd_context.verify(plain_password, hashed_password)
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    sha = hashlib.sha256(plain_password.encode("utf-8")).hexdigest()
+    return pwd_context.verify(sha, hashed_password)
+
 
 
 def login_required(request: Request):
