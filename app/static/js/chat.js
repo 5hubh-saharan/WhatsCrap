@@ -2,7 +2,9 @@ let socket = null;
 
 // Called from chatroom.html
 function connectWebSocket(roomId, userId) {
-    const wsUrl = `ws://${window.location.host}/ws/chat/${roomId}?user_id=${userId}`;
+    const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+    const wsUrl = `${protocol}://${window.location.host}/ws/chat/${roomId}?user_id=${userId}`;
+
 
     socket = new WebSocket(wsUrl);
 
