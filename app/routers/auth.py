@@ -25,10 +25,21 @@ async def register_user(
     password: str = Form(...),
     db: AsyncSession = Depends(get_db)
 ):
-    user_data = UserCreate(username=username, password=password)
-    await create_user(db, user_data.username, user_data.password)
-
-    return RedirectResponse(url="/auth/login", status_code=302)
+    if len(password) < 6:
+        return templates.TemplateResponse("register.html", {
+            "request": request, 
+            "error": "Password must be at least 6 characters"
+        })
+    
+    try:
+        user_data = UserCreate(username=username, password=password)
+        await create_user(db, user_data.username, user_data.password)
+        return RedirectResponse(url="/auth/login", status_code=302)
+    except Exception as e:
+        return templates.TemplateResponse("register.html", {
+            "request": request,
+            "error": "Username already exists"
+        })
 
 
 # Login = get, post
