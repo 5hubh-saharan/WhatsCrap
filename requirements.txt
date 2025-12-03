@@ -6,3 +6,4 @@ passlib[bcrypt]
 sqlalchemy
 asyncpg
 pydantic-settings
+itsdangerous
