@@ -1,110 +1,31 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Login</h2>
+<div class="auth-container">
+    <h2>Login</h2>
 
-{% if error %}
-    <div class="error-message" id="server-error">
-        {{ error }}
-    </div>
-{% endif %}
+    {% if error %}
+        <div class="error-message" id="server-error">
+            {{ error }}
+        </div>
+    {% endif %}
 
-{% if success %}
-    <div class="success-message">
-        {{ success }}
-    </div>
-{% endif %}
+    {% if success %}
+        <div class="success-message">
+            {{ success }}
+        </div>
+    {% endif %}
 
-<form id="loginForm" action="/auth/login" method="post" class="form-box">
-    <input type="text" name="username" id="username" placeholder="Username" required value="{{ username or '' }}">
-    <div id="username-error" class="field-error"></div>
+    <form id="loginForm" action="/auth/login" method="post" class="form-box">
+        <input type="text" name="username" id="username" placeholder="Username" required value="{{ username or '' }}">
+        <div id="username-error" class="field-error"></div>
 
-    <input type="password" name="password" id="password" placeholder="Password" required>
-    <div id="password-error" class="field-error"></div>
+        <input type="password" name="password" id="password" placeholder="Password" required>
+        <div id="password-error" class="field-error"></div>
 
-    <button type="submit">Login</button>
-</form>
+        <button type="submit">Login</button>
+    </form>
 
-<p>Don't have an account? <a href="/auth/register">Register here</a>.</p>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.addEventListener('submit', function(event) {
-            let isValid = true;
-            
-            // 清空之前的错误信息
-            document.querySelectorAll('.field-error').forEach(el => {
-                el.textContent = '';
-                el.classList.remove('error');
-            });
-            
-            // 验证用户名
-            const username = document.getElementById('username').value.trim();
-            const usernameInput = document.getElementById('username');
-            const usernameError = document.getElementById('username-error');
-            
-            if (!username) {
-                usernameError.textContent = 'Username is required';
-                usernameInput.classList.add('error');
-                isValid = false;
-            } else {
-                usernameInput.classList.remove('error');
-            }
-            
-            // 验证密码
-            const password = document.getElementById('password').value;
-            const passwordInput = document.getElementById('password');
-            const passwordError = document.getElementById('password-error');
-            
-            if (!password) {
-                passwordError.textContent = 'Password is required';
-                passwordInput.classList.add('error');
-                isValid = false;
-            } else {
-                passwordInput.classList.remove('error');
-            }
-            
-            if (!isValid) {
-                event.preventDefault();
-            }
-        });
-    }
-});
-</script>
-
-<style>
-.field-error {
-    color: #d32f2f;
-    font-size: 12px;
-    margin-top: 2px;
-    margin-bottom: 8px;
-    min-height: 16px;
-}
-
-.error-message {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 12px;
-    border-radius: 4px;
-    margin: 15px 0;
-    border: 1px solid #f5c6cb;
-}
-
-.success-message {
-    background-color: #d4edda;
-    color: #155724;
-    padding: 12px;
-    border-radius: 4px;
-    margin: 15px 0;
-    border: 1px solid #c3e6cb;
-}
-
-.form-box input.error {
-    border-color: #d32f2f;
-    border-width: 2px;
-}
-</style>
-
+    <p>Don't have an account? <a href="/auth/register">Register here</a>.</p>
+</div>
 {% endblock %}

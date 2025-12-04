@@ -3,27 +3,11 @@
 {% block content %}
 <h2>Room: {{ room.name }}</h2>
 
-<!-- 背景颜色选择器 -->
-<div class="background-selector">
-    <label for="bgColorSelect">Background Color:</label>
-    <select id="bgColorSelect" class="bg-select">
-        <option value="#252a34">Dark Blue</option>
-        <option value="#59A52C">Green</option>
-        <option value="#ffffff">White</option>
-        <option value="#3a4252">Gray Blue</option>
-        <option value="#101216">Dark Gray</option>
-        <option value="#6fca3a">Light Green</option>
-        <option value="#1a1a2e">Navy</option>
-        <option value="#0f3460">Deep Blue</option>
-    </select>
-    <button id="resetBg" class="reset-btn">Reset</button>
-</div>
-
 <hr>
 
 <h3>Messages:</h3>
 
-<div id="chatContainer" class="chat-container">
+<div class="chat-container">
     <ul id="messageList" class="message-list">
         {% for message in messages %}
             <li class="message-item {% if message.user_id|string == request.session.get('user_id') %}my-message{% else %}other-message{% endif %}">
@@ -77,30 +61,6 @@
     const userId = "{{ request.session.get('user_id') }}";
     const username = "{{ request.session.get('username', 'User') }}";
     connectWebSocket(roomId, userId, username);
-    
-    // 设置背景颜色选择器
-    const bgSelect = document.getElementById('bgColorSelect');
-    const resetBtn = document.getElementById('resetBg');
-    const chatContainer = document.getElementById('chatContainer');
-    
-    // 从localStorage读取保存的背景颜色
-    const savedBg = localStorage.getItem('chatBackgroundColor');
-    if (savedBg) {
-        chatContainer.style.backgroundColor = savedBg;
-        bgSelect.value = savedBg;
-    }
-    
-    bgSelect.addEventListener('change', function() {
-        const selectedColor = this.value;
-        chatContainer.style.backgroundColor = selectedColor;
-        localStorage.setItem('chatBackgroundColor', selectedColor);
-    });
-    
-    resetBtn.addEventListener('click', function() {
-        localStorage.removeItem('chatBackgroundColor');
-        chatContainer.style.backgroundColor = '';
-        bgSelect.value = '#252a34';
-    });
 </script>
 
 {% endblock %}

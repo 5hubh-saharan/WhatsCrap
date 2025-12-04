@@ -4,8 +4,11 @@ body {
     margin: 0;
     padding: 0;
     background: #f5f5f5;
+    transition: background-color 0.5s ease;
+    min-height: 100vh;
 }
 
+/* 导航栏样式 */
 .navbar {
     background: #222;
     color: white;
@@ -13,7 +16,29 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-left {
+    flex: 1;
+}
+
+.nav-center {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
 }
 
 .nav-left .brand {
@@ -21,12 +46,6 @@ body {
     font-weight: bold;
     text-decoration: none;
     color: white;
-}
-
-.nav-right {
-    display: flex;
-    align-items: center;
-    gap: 20px;
 }
 
 .nav-right a {
@@ -55,175 +74,104 @@ body {
     margin-right: 10px;
 }
 
-.container {
-    padding: 20px;
-    max-width: 800px;
-    margin: auto;
-}
-
-/* 表单样式 */
-.form-box {
-    margin: 20px 0;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.form-box input {
-    padding: 12px;
-    margin: 8px 0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-    width: 100%;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease;
-}
-
-.form-box input:focus {
-    outline: none;
-    border-color: #333;
-    box-shadow: 0 0 0 2px rgba(51, 51, 51, 0.2);
-}
-
-.form-box button {
-    padding: 12px 24px;
-    background: #333;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    transition: background 0.3s ease;
-    width: 100%;
-    margin-top: 10px;
-}
-
-.form-box button:hover {
-    background: #444;
-}
-
-/* 错误和成功消息样式 */
-.error-message {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 12px;
-    border-radius: 4px;
-    margin: 15px 0;
-    border: 1px solid #f5c6cb;
-    font-size: 14px;
-}
-
-.success-message {
-    background-color: #d4edda;
-    color: #155724;
-    padding: 12px;
-    border-radius: 4px;
-    margin: 15px 0;
-    border: 1px solid #c3e6cb;
-    font-size: 14px;
-}
-
-.field-error {
-    color: #d32f2f;
-    font-size: 12px;
-    margin-top: 2px;
-    margin-bottom: 8px;
-    min-height: 16px;
-}
-
-.form-box input.error {
-    border-color: #d32f2f !important;
-    border-width: 2px !important;
-}
-
-.form-box input:focus.error {
-    outline-color: #d32f2f !important;
-}
-
-/* 房间列表样式 */
-.room-list {
-    list-style: none;
-    padding: 0;
-}
-
-.room-list li {
-    margin: 10px 0;
-    padding: 10px 15px;
-    background-color: white;
-    border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-.room-list a {
-    text-decoration: none;
-    color: #333;
-    font-weight: 500;
-    font-size: 16px;
-}
-
-.room-list a:hover {
-    color: #007bff;
-}
-
 /* 背景颜色选择器 */
 .background-selector {
-    margin: 15px 0;
-    padding: 10px 15px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
     display: flex;
     align-items: center;
     gap: 10px;
-    flex-wrap: wrap;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 15px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
 }
 
 .background-selector label {
     font-weight: 600;
-    color: #333;
+    color: white;
+    font-size: 14px;
 }
 
 .bg-select {
     padding: 6px 12px;
-    border: 2px solid #ddd;
+    border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 6px;
-    background-color: white;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
     font-size: 14px;
-    min-width: 150px;
+    min-width: 120px;
+    transition: all 0.3s ease;
+}
+
+.bg-select:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.bg-select:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.3);
+}
+
+.bg-select option {
+    background-color: #333;
+    color: white;
+    padding: 8px;
 }
 
 .reset-btn {
     padding: 6px 12px;
-    background-color: #6c757d;
+    background-color: rgba(255, 255, 255, 0.2);
     color: white;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .reset-btn:hover {
-    background-color: #5a6268;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
 }
 
-/* 聊天容器 */
+/* 主容器样式 */
+.container {
+    padding: 20px;
+    max-width: 1000px;
+    margin: 20px auto;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+/* 当背景较暗时，调整容器样式 */
+body.dark-background .container {
+    background-color: rgba(30, 30, 30, 0.9);
+    color: #ffffff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* 聊天容器样式 */
 .chat-container {
-    background-color: #252a34;
+    background-color: rgba(255, 255, 255, 0.8);
     border-radius: 12px;
     padding: 20px;
     margin-bottom: 20px;
-    transition: background-color 0.3s ease;
-    min-height: 500px;
-    max-height: 600px;
+    min-height: 400px;
+    max-height: 500px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    backdrop-filter: blur(5px);
 }
 
-/* 消息列表 */
+body.dark-background .chat-container {
+    background-color: rgba(40, 40, 40, 0.8);
+}
+
+/* 消息列表样式 */
 .message-list {
     flex: 1;
     overflow-y: auto;
@@ -235,7 +183,7 @@ body {
     gap: 12px;
 }
 
-/* 消息项 */
+/* 消息项样式 */
 .message-item {
     display: flex;
     animation: fadeInUp 0.3s ease;
@@ -283,6 +231,11 @@ body {
     border-bottom-left-radius: 4px;
 }
 
+body.dark-background .message-item.other-message .message-bubble {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: #ffffff;
+}
+
 /* 系统消息样式 */
 .system-message {
     align-self: center !important;
@@ -291,8 +244,8 @@ body {
 }
 
 .system-bubble {
-    background-color: rgba(0, 0, 0, 0.2) !important;
-    color: #bbb !important;
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    color: #666 !important;
     padding: 8px 16px !important;
     border-radius: 20px !important;
     font-size: 12px !important;
@@ -300,6 +253,11 @@ body {
     text-align: center !important;
     border: none !important;
     box-shadow: none !important;
+}
+
+body.dark-background .system-bubble {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: #aaa !important;
 }
 
 /* 消息头部 */
@@ -328,6 +286,10 @@ body {
     color: #555;
 }
 
+body.dark-background .message-item.other-message .message-username {
+    color: #ddd;
+}
+
 .message-time {
     font-size: 11px;
     opacity: 0.7;
@@ -342,6 +304,10 @@ body {
     color: #777;
 }
 
+body.dark-background .message-item.other-message .message-time {
+    color: #aaa;
+}
+
 /* 消息内容 */
 .message-content {
     line-height: 1.5;
@@ -349,31 +315,65 @@ body {
     white-space: pre-wrap;
 }
 
-/* 新消息动画 */
-.message-item.new-message {
-    animation: messageSlideIn 0.5s ease;
+/* 表单样式 */
+.form-box {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-@keyframes messageSlideIn {
-    0% {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
+body.dark-background .form-box {
+    background-color: rgba(40, 40, 40, 0.9);
 }
 
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.form-box input {
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+    background-color: white;
+    color: #333;
+}
+
+body.dark-background .form-box input {
+    background-color: rgba(60, 60, 60, 0.9);
+    color: #fff;
+    border-color: #555;
+}
+
+.form-box input:focus {
+    outline: none;
+    border-color: #333;
+    box-shadow: 0 0 0 2px rgba(51, 51, 51, 0.2);
+}
+
+body.dark-background .form-box input:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.3);
+}
+
+.form-box button {
+    padding: 12px 24px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background 0.3s ease;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.form-box button:hover {
+    background: #444;
 }
 
 /* 消息发送表单样式 */
@@ -397,11 +397,23 @@ body {
     outline: none;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    color: #333;
+}
+
+body.dark-background .message-input-container input {
+    background-color: rgba(60, 60, 60, 0.9);
+    color: #fff;
+    border-color: #555;
 }
 
 .message-input-container input:focus {
     border-color: #4a90e2;
     box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+body.dark-background .message-input-container input:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3);
 }
 
 .message-input-container input.error {
@@ -449,47 +461,6 @@ body {
     opacity: 0.6;
 }
 
-.send-button svg {
-    transition: transform 0.3s ease;
-}
-
-.send-button:not(:disabled):hover svg {
-    transform: translateX(2px);
-}
-
-/* 新消息通知 */
-.new-message-notification {
-    position: fixed;
-    bottom: 100px;
-    right: 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 10px 20px;
-    border-radius: 20px;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    animation: slideInRight 0.3s ease;
-    z-index: 1000;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.new-message-notification:hover {
-    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
-    transform: translateY(-2px);
-}
-
-@keyframes slideInRight {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
 /* 连接状态指示器 */
 .connection-indicator {
     display: flex;
@@ -519,14 +490,6 @@ body {
     animation: pulse 2s infinite;
 }
 
-.connection-indicator.connected .indicator-dot {
-    animation: pulse 2s infinite;
-}
-
-.connection-indicator.disconnected .indicator-dot {
-    animation: none;
-}
-
 @keyframes pulse {
     0%, 100% {
         opacity: 1;
@@ -544,6 +507,10 @@ body {
     text-align: right;
 }
 
+body.dark-background .keyboard-hint {
+    color: #aaa;
+}
+
 .keyboard-hint kbd {
     background-color: #f4f4f4;
     border: 1px solid #ddd;
@@ -554,8 +521,35 @@ body {
     margin: 0 2px;
 }
 
+body.dark-background .keyboard-hint kbd {
+    background-color: #444;
+    border-color: #666;
+    color: #fff;
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px;
+    }
+    
+    .nav-left, .nav-center, .nav-right {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .nav-right {
+        margin-top: 10px;
+    }
+    
+    .background-selector {
+        margin-top: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
     .message-input-container {
         flex-direction: column;
     }
@@ -564,20 +558,145 @@ body {
         width: 100%;
     }
     
-    .message-list {
-        max-height: 400px;
-    }
-    
     .message-item {
         max-width: 85% !important;
     }
     
+    .container {
+        margin: 10px;
+        padding: 15px;
+    }
+}
+
+/* 全局背景支持 */
+#appBody {
+    min-height: 100vh;
+    transition: background-color 0.5s ease;
+    background-color: #f5f5f5; /* 默认背景 */
+}
+
+/* 暗色模式下的链接颜色 */
+.dark-background a {
+    color: #4a90e2;
+}
+
+.dark-background a:hover {
+    color: #6ca6ff;
+}
+
+/* 暗色模式下的错误消息 */
+.dark-background .error-message {
+    background-color: rgba(220, 53, 69, 0.2);
+    border-color: rgba(220, 53, 69, 0.4);
+}
+
+/* 暗色模式下的成功消息 */
+.dark-background .success-message {
+    background-color: rgba(40, 167, 69, 0.2);
+    border-color: rgba(40, 167, 69, 0.4);
+}
+
+/* 暗色模式下的输入框占位符颜色 */
+.dark-background input::placeholder,
+.dark-background textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* 暗色模式下的房间列表 */
+.dark-background .room-list li {
+    background-color: rgba(60, 60, 60, 0.8);
+    color: #ffffff;
+}
+
+.dark-background .room-list a {
+    color: #4a90e2;
+}
+
+.dark-background .room-list a:hover {
+    color: #6ca6ff;
+}
+
+/* 暗色模式下的分隔线 */
+.dark-background hr {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 暗色模式下的表单标签 */
+.dark-background h2,
+.dark-background h3,
+.dark-background label {
+    color: #ffffff;
+}
+
+/* 聊天室页面的特殊调整 */
+.chat-container {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    min-height: 500px;
+    max-height: 600px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.3s ease;
+}
+
+.dark-background .chat-container {
+    background-color: rgba(40, 40, 40, 0.9);
+}
+
+/* 消息列表滚动条样式 */
+.message-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.message-list::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+.message-list::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+}
+
+.dark-background .message-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.dark-background .message-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* 导航栏固定在顶部 */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
     .background-selector {
-        flex-direction: column;
-        align-items: flex-start;
+        margin: 10px 0;
+        order: 3;
+        width: 100%;
+        justify-content: center;
     }
     
-    .bg-select {
+    .nav-center {
+        order: 2;
         width: 100%;
     }
+    
+    .chat-container {
+        min-height: 400px;
+        max-height: 500px;
+    }
+}
+
+/* 平滑过渡效果 */
+.container, .form-box, .message-bubble, .chat-container {
+    transition: all 0.3s ease;
 }
