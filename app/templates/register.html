@@ -1,16 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Register</h2>
+<div class="auth-container">
+    <h2>Register</h2>
 
-<form action="/auth/register" method="post" class="form-box">
-    <input type="text" name="username" placeholder="Choose a username" required>
+    {% if error %}
+        <div class="error-message" id="server-error">
+            {{ error }}
+        </div>
+    {% endif %}
 
-    <input type="password" name="password" placeholder="Choose a password" required>
+    <form id="registerForm" action="/auth/register" method="post" class="form-box">
+        <input type="text" name="username" id="username" placeholder="Choose a username" required value="{{ username or '' }}">
+        <div id="username-error" class="field-error"></div>
 
-    <button type="submit">Register</button>
-</form>
+        <input type="password" name="password" id="password" placeholder="Choose a password" required>
+        <div id="password-error" class="field-error"></div>
 
-<p>Already have an account? <a href="/auth/login">Login here</a>.</p>
+        <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm password" required>
+        <div id="confirm-password-error" class="field-error"></div>
 
+        <button type="submit">Register</button>
+    </form>
+
+    <p>Already have an account? <a href="/auth/login">Login here</a>.</p>
+</div>
 {% endblock %}

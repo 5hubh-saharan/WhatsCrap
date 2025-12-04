@@ -6,11 +6,27 @@ from datetime import datetime
 import uuid
 
 class User(Base):
-    __tablename__ = 'users'
+    """Model representing a user in the chat application."""
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    username: Mapped[str] = mapped_column(String(100), nullable=False, unique=True)
-    password: Mapped[str] = mapped_column(String, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(TIMESTAMP, server_default=func.now())
+    __tablename__ = 'users'# Database table name
 
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+        # Primary key, automatically generated UUID
+
+    username: Mapped[str] = mapped_column(
+        String(100), nullable=False, unique=True)
+        # Username, must be unique and cannot be null
+
+    password: Mapped[str] = mapped_column(
+        String, nullable=False)
+        # Hashed password, cannot be null
+
+    created_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP, server_default=func.now())
+        # Timestamp of when the user was created,
+
+
+    # One-to-many relationship with Message model
+    # Lists all messages sent by this user
     messages: Mapped[list["Message"]] = relationship(back_populates="user") # pyright: ignore[reportUndefinedVariable]

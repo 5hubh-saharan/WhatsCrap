@@ -7,22 +7,51 @@
 
 <h3>Messages:</h3>
 
-<ul id="messageList" class="message-list">
-    {% for message in messages %}
-        <li>
-            <strong>{{ message.user.username }}</strong>: {{ message.content }}
-        </li>
-    {% endfor %}
-</ul>
+<div class="chat-container">
+    <ul id="messageList" class="message-list">
+        {% for message in messages %}
+            <li class="message-item {% if message.user_id|string == request.session.get('user_id') %}my-message{% else %}other-message{% endif %}">
+                <div class="message-bubble">
+                    <div class="message-header">
+                        {% if message.user_id|string != request.session.get('user_id') %}
+                        <strong class="message-username">{{ message.user.username }}</strong>
+                        {% endif %}
+                        <span class="message-time">{{ message.created_at.strftime('%H:%M') if message.created_at else '' }}</span>
+                        {% if message.user_id|string == request.session.get('user_id') %}
+                        <strong class="message-username">You</strong>
+                        {% endif %}
+                    </div>
+                    <div class="message-content">{{ message.content }}</div>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
 
 <hr>
 
 <h3>Send a Message</h3>
 
-<div>
-    <input id="messageInput" type="text" placeholder="Write your message..." required>
-    <button onclick="sendMessage()">Send</button>
-</div>
+<form id="messageForm" class="message-form">
+    <div class="message-input-container">
+        <input 
+            id="messageInput" 
+            type="text" 
+            placeholder="Write your message and press Enter to send..." 
+            required
+            autocomplete="off"
+            autofocus
+        >
+        <button type="submit" id="sendButton" class="send-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+            <span class="button-text">Send</span>
+        </button>
+    </div>
+    <div id="messageError" class="field-error"></div>
+</form>
 
 <script src="/static/js/chat.js"></script>
 
@@ -30,7 +59,8 @@
     // Connect WebSocket
     const roomId = "{{ room.id }}";
     const userId = "{{ request.session.get('user_id') }}";
-    connectWebSocket(roomId, userId);
+    const username = "{{ request.session.get('username', 'User') }}";
+    connectWebSocket(roomId, userId, username);
 </script>
 
 {% endblock %}

@@ -10,24 +10,23 @@ from app.utils.security import login_required
 from app.websocket import chatws
 
 
-app = FastAPI()
+app = FastAPI()# FastAPI application instance
 
-templates = Jinja2Templates(directory="app/templates")
+templates = Jinja2Templates(directory="app/templates")# Jinja2 templates for rendering HTML pages
 
 app.add_middleware(
+    # Session middleware for managing user sessions
     SessionMiddleware,
     secret_key=settings.SECRET_KEY,
     session_cookie="session_id",
+    max_age=3600,
 )
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-
-app.include_router(auth.router)
-app.include_router(chat.router)
-app.include_router(chatws.router)
-
-
+app.include_router(auth.router)# Authentication routes
+app.include_router(chat.router)# Chat routes
+app.include_router(chatws.router)# WebSocket chat routes
 
 @app.get("/")
 async def home():

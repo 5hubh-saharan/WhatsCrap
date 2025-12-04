@@ -2,18 +2,54 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WhatsCrap</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 
-<body>
+<body id="appBody">
     <nav class="navbar">
         <div class="nav-left">
-            <a href="/">WhatsCrap</a>
+            <a href="/" class="brand">WhatsCrap 💬</a>
+        </div>
+        <div class="nav-center">
+            {% if request.session.get('user_id') %}
+            <!-- Background color selector -->
+            <div class="background-selector">
+                <label for="bgColorSelect">Background:</label>
+                <select id="bgColorSelect" class="bg-select">
+                    <option value="#f5f5f5">Light Gray</option>
+                    <option value="#ffffff">White</option>
+                    <option value="#252a34">Dark Blue</option>
+                    <option value="#59A52C">Green</option>
+                    <option value="#3a4252">Gray Blue</option>
+                    <option value="#101216">Dark Gray</option>
+                    <option value="#6fca3a">Light Green</option>
+                    <option value="#1a1a2e">Navy</option>
+                    <option value="#0f3460">Deep Blue</option>
+                    <option value="#f0f8ff">Alice Blue</option>
+                    <option value="#faf0e6">Linen</option>
+                    <option value="#fff5ee">Sea Shell</option>
+                    <option value="#2c003e">Purple</option>
+                    <option value="#1b1b2f">Dark Purple</option>
+                    <option value="#162447">Midnight</option>
+                </select>
+                <button id="resetBg" class="reset-btn">Reset</button>
+            </div>
+            {% endif %}
         </div>
         <div class="nav-right">
-            <a href="/chat/rooms">Rooms</a>
-            <a href="/auth/logout">Logout</a>
+            {% if request.session.get('user_id') %}
+                <span class="welcome-message">Welcome, {{ request.session.get('username', 'User') }}!</span>
+                <div id="connectionIndicator" class="connection-indicator connected" title="Connected">
+                    <span class="indicator-dot"></span>
+                </div>
+                <a href="/chat/rooms">Rooms</a>
+                <a href="/auth/logout" class="logout-btn">Logout</a>
+            {% else %}
+                <a href="/auth/login">Login</a>
+                <a href="/auth/register">Register</a>
+            {% endif %}
         </div>
     </nav>
 
@@ -21,5 +57,176 @@
         {% block content %}
         {% endblock %}
     </main>
+    
+    <!-- Keyboard shortcut tips -->
+    <div class="keyboard-hint container">
+        <small>
+            <kbd>Enter</kbd> to send • 
+            <kbd>/</kbd> to focus input
+        </small>
+    </div>
+
+    <script>
+        // Set background color picker (applies to the entire window)
+        document.addEventListener('DOMContentLoaded', function() {
+            const bgSelect = document.getElementById('bgColorSelect');
+            const resetBtn = document.getElementById('resetBg');
+            const appBody = document.getElementById('appBody');
+            
+            if (!bgSelect || !resetBtn || !appBody) return;
+            
+            // Read the saved background color from localStorage
+            const savedBg = localStorage.getItem('appBackgroundColor');
+            if (savedBg) {
+                appBody.style.backgroundColor = savedBg;
+                bgSelect.value = savedBg;
+                updateTextColors(savedBg);
+                updateDarkModeClass(savedBg);
+            }
+            
+            // Listen for changes in background color selection
+            bgSelect.addEventListener('change', function() {
+                const selectedColor = this.value;
+                appBody.style.backgroundColor = selectedColor;
+                localStorage.setItem('appBackgroundColor', selectedColor);
+                updateTextColors(selectedColor);
+                updateDarkModeClass(selectedColor);
+            });
+            
+            // Reset background color
+            resetBtn.addEventListener('click', function() {
+                localStorage.removeItem('appBackgroundColor');
+                appBody.style.backgroundColor = '';
+                appBody.classList.remove('dark-background');
+                bgSelect.value = '#f5f5f5';
+                updateTextColors('#f5f5f5');
+                resetFormStyles();
+            });
+            
+            // Class for adjusting dark mode based on background color
+            function updateDarkModeClass(bgColor) {
+                // Calculate background brightness
+                const color = bgColor.charAt(0) === '#' ? bgColor.substring(1, 7) : bgColor;
+                const r = parseInt(color.substring(0, 2), 16);
+                const g = parseInt(color.substring(2, 4), 16);
+                const b = parseInt(color.substring(4, 6), 16);
+                const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+                
+                // Add or remove dark background class
+                if (brightness < 128) {
+                    appBody.classList.add('dark-background');
+                } else {
+                    appBody.classList.remove('dark-background');
+                }
+            }
+            
+            // Adjust text color according to background color
+            function updateTextColors(bgColor) {
+                // Calculate background brightness
+                const color = bgColor.charAt(0) === '#' ? bgColor.substring(1, 7) : bgColor;
+                const r = parseInt(color.substring(0, 2), 16);
+                const g = parseInt(color.substring(2, 4), 16);
+                const b = parseInt(color.substring(4, 6), 16);
+                const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+                
+                // Update container text color
+                const containers = document.querySelectorAll('.container');
+                containers.forEach(container => {
+                    if (brightness < 128) {
+                        container.style.color = '#ffffff';
+                    } else {
+                        container.style.color = '#333333';
+                    }
+                });
+                
+                // Update form input styles
+                updateFormStyles(brightness);
+            }
+            
+            // Update form styles
+            function updateFormStyles(brightness) {
+                const inputs = document.querySelectorAll('input:not(.bg-select), textarea');
+                const selects = document.querySelectorAll('select:not(.bg-select)');
+                
+                    // Update regular inputs
+                inputs.forEach(input => {
+                    if (brightness < 128) {
+                        input.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                        input.style.color = '#ffffff';
+                        input.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                        input.style.setProperty('--placeholder-color', 'rgba(255, 255, 255, 0.5)');
+                    } else {
+                        input.style.backgroundColor = '';
+                        input.style.color = '';
+                        input.style.borderColor = '';
+                        input.style.setProperty('--placeholder-color', '');
+                    }
+                });
+                
+                    // Update selects
+                selects.forEach(select => {
+                    if (brightness < 128) {
+                        select.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                        select.style.color = '#ffffff';
+                        select.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                    } else {
+                        select.style.backgroundColor = '';
+                        select.style.color = '';
+                        select.style.borderColor = '';
+                    }
+                });
+            }
+            
+            // Reset form styles
+            function resetFormStyles() {
+                const inputs = document.querySelectorAll('input:not(.bg-select), textarea');
+                const selects = document.querySelectorAll('select:not(.bg-select)');
+                
+                inputs.forEach(input => {
+                    input.style.backgroundColor = '';
+                    input.style.color = '';
+                    input.style.borderColor = '';
+                    input.style.setProperty('--placeholder-color', '');
+                });
+                
+                selects.forEach(select => {
+                    select.style.backgroundColor = '';
+                    select.style.color = '';
+                    select.style.borderColor = '';
+                });
+                
+                const containers = document.querySelectorAll('.container');
+                containers.forEach(container => {
+                    container.style.color = '';
+                });
+            }
+            
+            // Initial setup
+            updateFormStyles(savedBg ? getBrightness(savedBg) : 200);
+            
+            // Helper: calculate color brightness
+            function getBrightness(color) {
+                const col = color.charAt(0) === '#' ? color.substring(1, 7) : color;
+                const r = parseInt(col.substring(0, 2), 16);
+                const g = parseInt(col.substring(2, 4), 16);
+                const b = parseInt(col.substring(4, 6), 16);
+                return (r * 299 + g * 587 + b * 114) / 1000;
+            }
+            
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Ctrl+B or Cmd+B to focus background selector
+                if ((e.ctrlKey || e.metaKey) && e.key === 'b' && bgSelect) {
+                    e.preventDefault();
+                    bgSelect.focus();
+                }
+                
+                // Esc to close background selector
+                if (e.key === 'Escape' && document.activeElement === bgSelect) {
+                    bgSelect.blur();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
