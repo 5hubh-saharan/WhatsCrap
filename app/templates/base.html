@@ -10,11 +10,14 @@
 <body>
     <nav class="navbar">
         <div class="nav-left">
-            <a href="/" class="brand">WhatsCrap</a>
+            <a href="/" class="brand">WhatsCrap 💬</a>
         </div>
         <div class="nav-right">
             {% if request.session.get('user_id') %}
                 <span class="welcome-message">Welcome, {{ request.session.get('username', 'User') }}!</span>
+                <div id="connectionIndicator" class="connection-indicator connected" title="Connected">
+                    <span class="indicator-dot"></span>
+                </div>
                 <a href="/chat/rooms">Rooms</a>
                 <a href="/auth/logout" class="logout-btn">Logout</a>
             {% else %}
@@ -28,5 +31,13 @@
         {% block content %}
         {% endblock %}
     </main>
+    
+    <!-- 键盘快捷键提示 -->
+    <div class="keyboard-hint container">
+        <small>
+            <kbd>Enter</kbd> to send • 
+            <kbd>/</kbd> to focus input
+        </small>
+    </div>
 </body>
 </html>

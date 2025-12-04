@@ -3,27 +3,51 @@
 {% block content %}
 <h2>Room: {{ room.name }}</h2>
 
+<!-- 背景颜色选择器 -->
+<div class="background-selector">
+    <label for="bgColorSelect">Background Color:</label>
+    <select id="bgColorSelect" class="bg-select">
+        <option value="#252a34">Dark Blue</option>
+        <option value="#59A52C">Green</option>
+        <option value="#ffffff">White</option>
+        <option value="#3a4252">Gray Blue</option>
+        <option value="#101216">Dark Gray</option>
+        <option value="#6fca3a">Light Green</option>
+        <option value="#1a1a2e">Navy</option>
+        <option value="#0f3460">Deep Blue</option>
+    </select>
+    <button id="resetBg" class="reset-btn">Reset</button>
+</div>
+
 <hr>
 
 <h3>Messages:</h3>
 
-<ul id="messageList" class="message-list">
-    {% for message in messages %}
-        <li class="message-item">
-            <div class="message-header">
-                <strong class="message-username">{{ message.user.username }}</strong>
-                <span class="message-time">{{ message.created_at.strftime('%H:%M') if message.created_at else '' }}</span>
-            </div>
-            <div class="message-content">{{ message.content }}</div>
-        </li>
-    {% endfor %}
-</ul>
+<div id="chatContainer" class="chat-container">
+    <ul id="messageList" class="message-list">
+        {% for message in messages %}
+            <li class="message-item {% if message.user_id|string == request.session.get('user_id') %}my-message{% else %}other-message{% endif %}">
+                <div class="message-bubble">
+                    <div class="message-header">
+                        {% if message.user_id|string != request.session.get('user_id') %}
+                        <strong class="message-username">{{ message.user.username }}</strong>
+                        {% endif %}
+                        <span class="message-time">{{ message.created_at.strftime('%H:%M') if message.created_at else '' }}</span>
+                        {% if message.user_id|string == request.session.get('user_id') %}
+                        <strong class="message-username">You</strong>
+                        {% endif %}
+                    </div>
+                    <div class="message-content">{{ message.content }}</div>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
 
 <hr>
 
 <h3>Send a Message</h3>
 
-<!-- 修改为form表单，支持回车发送 -->
 <form id="messageForm" class="message-form">
     <div class="message-input-container">
         <input 
@@ -51,14 +75,31 @@
     // Connect WebSocket
     const roomId = "{{ room.id }}";
     const userId = "{{ request.session.get('user_id') }}";
-    connectWebSocket(roomId, userId);
+    const username = "{{ request.session.get('username', 'User') }}";
+    connectWebSocket(roomId, userId, username);
     
-    // 添加键盘快捷键提示
-    document.addEventListener('keydown', function(e) {
-        if (e.key === '/' && document.activeElement !== document.getElementById('messageInput')) {
-            e.preventDefault();
-            document.getElementById('messageInput').focus();
-        }
+    // 设置背景颜色选择器
+    const bgSelect = document.getElementById('bgColorSelect');
+    const resetBtn = document.getElementById('resetBg');
+    const chatContainer = document.getElementById('chatContainer');
+    
+    // 从localStorage读取保存的背景颜色
+    const savedBg = localStorage.getItem('chatBackgroundColor');
+    if (savedBg) {
+        chatContainer.style.backgroundColor = savedBg;
+        bgSelect.value = savedBg;
+    }
+    
+    bgSelect.addEventListener('change', function() {
+        const selectedColor = this.value;
+        chatContainer.style.backgroundColor = selectedColor;
+        localStorage.setItem('chatBackgroundColor', selectedColor);
+    });
+    
+    resetBtn.addEventListener('click', function() {
+        localStorage.removeItem('chatBackgroundColor');
+        chatContainer.style.backgroundColor = '';
+        bgSelect.value = '#252a34';
     });
 </script>
 

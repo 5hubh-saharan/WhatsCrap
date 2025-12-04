@@ -4,9 +4,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.session import get_db
-from app.schemas.user_schema import UserCreate
 from app.services.auth_service import create_user, authenticate_user
-
 
 router = APIRouter(prefix="/auth")
 templates = Jinja2Templates(directory="app/templates")
@@ -14,6 +12,7 @@ templates = Jinja2Templates(directory="app/templates")
 
 @router.get("/register", response_class=HTMLResponse)
 async def register_page(request: Request):
+    """注册页面"""
     return templates.TemplateResponse("register.html", {"request": request})
 
 
@@ -22,8 +21,9 @@ async def register_user(
     request: Request,
     username: str = Form(...),
     password: str = Form(...),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
+    """注册用户"""
     try:
         # 创建用户数据对象（验证由create_user函数完成）
         await create_user(db, username, password)
@@ -50,6 +50,7 @@ async def register_user(
 
 @router.get("/login", response_class=HTMLResponse)
 async def login_page(request: Request):
+    """登录页面"""
     return templates.TemplateResponse("login.html", {"request": request})
 
 
@@ -58,8 +59,9 @@ async def login_user(
     request: Request,
     username: str = Form(...),
     password: str = Form(...),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
+    """用户登录"""
     user = await authenticate_user(db, username, password)
 
     if not user:
@@ -81,5 +83,6 @@ async def login_user(
 
 @router.get("/logout")
 async def logout(request: Request):
+    """用户注销"""
     request.session.clear()
     return RedirectResponse(url="/auth/login", status_code=302)

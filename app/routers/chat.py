@@ -1,5 +1,3 @@
-# app/routers/chat.py
-
 from fastapi import APIRouter, Depends, Request, Form, HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -12,7 +10,6 @@ from app.services.chat_service import (
     get_room,
     create_room_service,
     get_messages_for_room,
-    create_message,
 )
 
 router = APIRouter(prefix="/chat")
@@ -25,13 +22,14 @@ async def list_rooms(
     db: AsyncSession = Depends(get_db),
     user_id: str = Depends(login_required),
 ):
+    """列出所有聊天室"""
     rooms = await get_all_rooms(db)
     return templates.TemplateResponse(
         "rooms.html",
         {
             "request": request,
             "rooms": rooms,
-            "username": request.session.get("username", "User")  # 添加用户名到上下文
+            "username": request.session.get("username", "User")
         },
     )
 
@@ -43,6 +41,7 @@ async def open_room(
     db: AsyncSession = Depends(get_db),
     user_id: str = Depends(login_required),
 ):
+    """打开特定聊天室"""
     room = await get_room(db, room_id)
     if room is None:
         raise HTTPException(status_code=404, detail="Room not found")
@@ -54,7 +53,7 @@ async def open_room(
             "request": request,
             "room": room,
             "messages": messages,
-            "username": request.session.get("username", "User")  # 添加用户名到上下文
+            "username": request.session.get("username", "User")
         },
     )
 
@@ -66,6 +65,7 @@ async def create_room(
     db: AsyncSession = Depends(get_db),
     user_id: str = Depends(login_required),
 ):
+    """创建新聊天室"""
     try:
         await create_room_service(db, name)
     except HTTPException as e:
@@ -81,15 +81,3 @@ async def create_room(
         )
 
     return RedirectResponse(url="/chat/rooms", status_code=302)
-
-
-@router.post("/send-message/{room_id}")
-async def send_message(
-    request: Request,
-    room_id: str,
-    content: str = Form(...),
-    db: AsyncSession = Depends(get_db),
-    user_id: str = Depends(login_required),
-):
-    await create_message(db, room_id, user_id, content)
-    return RedirectResponse(url=f"/chat/room/{room_id}", status_code=302)

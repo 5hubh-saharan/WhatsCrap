@@ -18,17 +18,14 @@ app.add_middleware(
     SessionMiddleware,
     secret_key=settings.SECRET_KEY,
     session_cookie="session_id",
-    max_age=3600,  # 1小时会话过期时间
+    max_age=3600,
 )
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-
 app.include_router(auth.router)
 app.include_router(chat.router)
 app.include_router(chatws.router)
-
-
 
 @app.get("/")
 async def home():
