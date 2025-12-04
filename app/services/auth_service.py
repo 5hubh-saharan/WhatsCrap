@@ -7,88 +7,122 @@ from app.models.user import User
 from app.utils.security import hash_password, verify_password
 
 
-async def create_user(db: AsyncSession, username: str, password: str) -> User:
+async def create_user(
+        db: AsyncSession, username: str, password: str) -> User:
     """
-    创建新用户（包含完整的验证逻辑）
-    
+    Create a new user (including complete authentication logic)
+
     Args:
-        db: 数据库会话
-        username: 用户名
-        password: 密码
-    
+
+        db: Database session
+
+        username: Username
+
+        password: Password
+
     Returns:
-        创建的User对象
-    
+
+        The created User object
+
     Raises:
-        HTTPException: 验证失败时抛出错误
+
+        HTTPException: Throws an error if authentication fails
     """
-    # 1. 用户名验证
+    # 1. Username verification
     if not username or len(username.strip()) == 0:
         raise HTTPException(status_code=400, detail="Username cannot be empty")
     
     if len(username) > 100:
-        raise HTTPException(status_code=400, detail="Username too long (max 100 characters)")
+        raise HTTPException(
+            status_code=400, detail="Username too long (max 100 characters)")
     
-    # 2. 密码验证
+    # 2. Password verification
     if not password:
         raise HTTPException(status_code=400, detail="Password cannot be empty")
+    # Password length checks
     
     if len(password) < 6:
-        raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
+        raise HTTPException(
+            status_code=400, detail="Password must be at least 6 characters")
+    # Min length check
     
     if len(password) > 128:
-        raise HTTPException(status_code=400, detail="Password too long (max 128 characters)")
+        raise HTTPException(
+            status_code=400, detail="Password too long (max 128 characters)")
+    # Max length check
     
-    # 3. 检查用户名是否已存在
+    # 3. Check if the username already exists.
     stmt = select(User).where(User.username == username)
+    # Query to find existing user by username
+
     result = await db.execute(stmt)
+    # Execute the query
+
+
     if result.scalars().first():
-        raise HTTPException(status_code=400, detail=f"Username '{username}' already exists")
+        raise HTTPException(
+            status_code=400, detail=f"Username '{username}' already exists")
+    # Username already taken
     
-    # 4. 创建用户
+    # 4. Create a user
     hashed_pw = hash_password(password)
     user = User(username=username, password=hashed_pw)
 
     try:
-        db.add(user)
-        await db.commit()
-        await db.refresh(user)
+        db.add(user) # Add the new user to the session
+        await db.commit() # Commit the transaction to save the user
+        await db.refresh(user) # Refresh the instance to get updated data from the DB
         return user
     except IntegrityError:
         await db.rollback()
-        # 再次检查是否是用户名重复的错误
-        raise HTTPException(status_code=400, detail=f"Username '{username}' already exists")
+        # Double-check if it's a duplicate username error.
+        raise HTTPException(
+            status_code=400, detail=f"Username '{username}' already exists")
+            # Integrity error likely due to duplicate username
+
     except Exception as e:
-        await db.rollback()
+        await db.rollback() # Rollback on any other exception
         raise HTTPException(
             status_code=500,
             detail="Internal server error while creating user"
-        )
+        ) # General error
 
 
-async def authenticate_user(db: AsyncSession, username: str, password: str) -> User | None:
+async def authenticate_user(
+        db: AsyncSession, username: str, password: str) -> User | None:
     """
-    验证用户凭据
-    
+    Verify user credentials
+
     Args:
-        db: 数据库会话
-        username: 用户名
-        password: 密码
-    
+
+        db: Database session
+
+        username: Username
+
+        password: Password
+
     Returns:
-        如果验证成功返回User对象，否则返回None
+
+        Returns a User object if authentication is successful, otherwise returns None
     """
-    # 输入验证
+    # Input Validation
     if not username or not password:
         return None
+        # Missing username or password
     
     try:
         statement = select(User).where(User.username == username)
+        # Query to find user by username
+
         result = await db.execute(statement)
+        # Execute the query
+
         user = result.scalars().first()
+        # Get the first matching user
 
         if user and verify_password(password, user.password):
             return user
+            # Password matches, return the user
 
         return None
     except Exception:
@@ -97,14 +131,16 @@ async def authenticate_user(db: AsyncSession, username: str, password: str) -> U
 
 async def get_user_by_id(db: AsyncSession, user_id: str) -> User | None:
     """
-    根据ID获取用户
-    
+    Retrieve User by ID
+
     Args:
-        db: 数据库会话
-        user_id: 用户ID
-    
-    Returns:
-        User对象或None
+
+        db: Database session
+
+        user_id: User ID
+
+    Returns: 
+        User object or None
     """
     try:
         import uuid
@@ -113,7 +149,7 @@ async def get_user_by_id(db: AsyncSession, user_id: str) -> User | None:
         result = await db.execute(stmt)
         return result.scalars().first()
     except (ValueError, AttributeError):
-        # 无效的UUID格式或user_id为空
+        # Invalid UUID format or empty user_id
         return None
     except Exception:
         return None
@@ -121,14 +157,16 @@ async def get_user_by_id(db: AsyncSession, user_id: str) -> User | None:
 
 async def get_user_by_username(db: AsyncSession, username: str) -> User | None:
     """
-    根据用户名获取用户
-    
+    Retrieve User by Username
+
     Args:
-        db: 数据库会话
-        username: 用户名
-    
-    Returns:
-        User对象或None
+
+        db: Database session
+
+        username: Username
+
+    Returns: 
+        User object or None
     """
     try:
         stmt = select(User).where(User.username == username)

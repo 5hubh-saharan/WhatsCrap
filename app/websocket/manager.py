@@ -46,7 +46,7 @@ class ConnectionManager:
             print(f"Failed to send personal JSON: {e}")
 
     async def broadcast(self, room_id: str, message: str, exclude_websocket: WebSocket = None) -> None:
-        """广播消息，可以排除某个连接"""
+        """Broadcast a text message to a room; can exclude a specific connection."""
         connections = list(self.active_connections.get(room_id, set()))
         
         for connection in connections:
@@ -58,7 +58,7 @@ class ConnectionManager:
                 self.disconnect(room_id, connection)
 
     async def broadcast_json(self, room_id: str, data: dict, exclude_websocket: WebSocket = None) -> None:
-        """广播JSON数据，可以排除某个连接"""
+        """Broadcast JSON data to a room; can exclude a specific connection."""
         connections = list(self.active_connections.get(room_id, set()))
         
         for connection in connections:

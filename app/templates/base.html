@@ -14,7 +14,7 @@
         </div>
         <div class="nav-center">
             {% if request.session.get('user_id') %}
-            <!-- 背景颜色选择器 -->
+            <!-- Background color selector -->
             <div class="background-selector">
                 <label for="bgColorSelect">Background:</label>
                 <select id="bgColorSelect" class="bg-select">
@@ -58,7 +58,7 @@
         {% endblock %}
     </main>
     
-    <!-- 键盘快捷键提示 -->
+    <!-- Keyboard shortcut tips -->
     <div class="keyboard-hint container">
         <small>
             <kbd>Enter</kbd> to send • 
@@ -67,7 +67,7 @@
     </div>
 
     <script>
-        // 设置背景颜色选择器（应用到整个窗口）
+        // Set background color picker (applies to the entire window)
         document.addEventListener('DOMContentLoaded', function() {
             const bgSelect = document.getElementById('bgColorSelect');
             const resetBtn = document.getElementById('resetBg');
@@ -75,7 +75,7 @@
             
             if (!bgSelect || !resetBtn || !appBody) return;
             
-            // 从localStorage读取保存的背景颜色
+            // Read the saved background color from localStorage
             const savedBg = localStorage.getItem('appBackgroundColor');
             if (savedBg) {
                 appBody.style.backgroundColor = savedBg;
@@ -84,7 +84,7 @@
                 updateDarkModeClass(savedBg);
             }
             
-            // 监听背景颜色选择变化
+            // Listen for changes in background color selection
             bgSelect.addEventListener('change', function() {
                 const selectedColor = this.value;
                 appBody.style.backgroundColor = selectedColor;
@@ -93,7 +93,7 @@
                 updateDarkModeClass(selectedColor);
             });
             
-            // 重置背景颜色
+            // Reset background color
             resetBtn.addEventListener('click', function() {
                 localStorage.removeItem('appBackgroundColor');
                 appBody.style.backgroundColor = '';
@@ -103,16 +103,16 @@
                 resetFormStyles();
             });
             
-            // 根据背景颜色调整暗色模式类
+            // Class for adjusting dark mode based on background color
             function updateDarkModeClass(bgColor) {
-                // 计算背景亮度
+                // Calculate background brightness
                 const color = bgColor.charAt(0) === '#' ? bgColor.substring(1, 7) : bgColor;
                 const r = parseInt(color.substring(0, 2), 16);
                 const g = parseInt(color.substring(2, 4), 16);
                 const b = parseInt(color.substring(4, 6), 16);
                 const brightness = (r * 299 + g * 587 + b * 114) / 1000;
                 
-                // 添加或移除暗色背景类
+                // Add or remove dark background class
                 if (brightness < 128) {
                     appBody.classList.add('dark-background');
                 } else {
@@ -120,16 +120,16 @@
                 }
             }
             
-            // 根据背景颜色调整文字颜色
+            // Adjust text color according to background color
             function updateTextColors(bgColor) {
-                // 计算背景亮度
+                // Calculate background brightness
                 const color = bgColor.charAt(0) === '#' ? bgColor.substring(1, 7) : bgColor;
                 const r = parseInt(color.substring(0, 2), 16);
                 const g = parseInt(color.substring(2, 4), 16);
                 const b = parseInt(color.substring(4, 6), 16);
                 const brightness = (r * 299 + g * 587 + b * 114) / 1000;
                 
-                // 更新容器文字颜色
+                // Update container text color
                 const containers = document.querySelectorAll('.container');
                 containers.forEach(container => {
                     if (brightness < 128) {
@@ -139,16 +139,16 @@
                     }
                 });
                 
-                // 更新表单输入框样式
+                // Update form input styles
                 updateFormStyles(brightness);
             }
             
-            // 更新表单样式
+            // Update form styles
             function updateFormStyles(brightness) {
                 const inputs = document.querySelectorAll('input:not(.bg-select), textarea');
                 const selects = document.querySelectorAll('select:not(.bg-select)');
                 
-                // 更新普通输入框
+                    // Update regular inputs
                 inputs.forEach(input => {
                     if (brightness < 128) {
                         input.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
@@ -163,7 +163,7 @@
                     }
                 });
                 
-                // 更新选择框
+                    // Update selects
                 selects.forEach(select => {
                     if (brightness < 128) {
                         select.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
@@ -177,7 +177,7 @@
                 });
             }
             
-            // 重置表单样式
+            // Reset form styles
             function resetFormStyles() {
                 const inputs = document.querySelectorAll('input:not(.bg-select), textarea');
                 const selects = document.querySelectorAll('select:not(.bg-select)');
@@ -201,10 +201,10 @@
                 });
             }
             
-            // 初始设置
+            // Initial setup
             updateFormStyles(savedBg ? getBrightness(savedBg) : 200);
             
-            // 辅助函数：计算颜色亮度
+            // Helper: calculate color brightness
             function getBrightness(color) {
                 const col = color.charAt(0) === '#' ? color.substring(1, 7) : color;
                 const r = parseInt(col.substring(0, 2), 16);
@@ -213,15 +213,15 @@
                 return (r * 299 + g * 587 + b * 114) / 1000;
             }
             
-            // 添加键盘快捷键
+            // Add keyboard shortcuts
             document.addEventListener('keydown', function(e) {
-                // Ctrl+B 或 Cmd+B 快速打开背景选择器
+                // Ctrl+B or Cmd+B to focus background selector
                 if ((e.ctrlKey || e.metaKey) && e.key === 'b' && bgSelect) {
                     e.preventDefault();
                     bgSelect.focus();
                 }
                 
-                // Esc 关闭背景选择器
+                // Esc to close background selector
                 if (e.key === 'Escape' && document.activeElement === bgSelect) {
                     bgSelect.blur();
                 }

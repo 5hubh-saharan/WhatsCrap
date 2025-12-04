@@ -7,82 +7,92 @@ from app.database.session import get_db
 from app.services.auth_service import create_user, authenticate_user
 
 router = APIRouter(prefix="/auth")
+# Authentication router with URL prefix
+
 templates = Jinja2Templates(directory="app/templates")
+# Jinja2 templates for rendering HTML pages
 
 
 @router.get("/register", response_class=HTMLResponse)
 async def register_page(request: Request):
-    """注册页面"""
+    """Render the user registration page.""" 
     return templates.TemplateResponse("register.html", {"request": request})
 
 
 @router.post("/register")
 async def register_user(
     request: Request,
-    username: str = Form(...),
-    password: str = Form(...),
-    db: AsyncSession = Depends(get_db),
+    username: str = Form(...), # Username from form data
+
+    password: str = Form(...), # Password from form data
+
+    db: AsyncSession = Depends(get_db),# Database session dependency
 ):
-    """注册用户"""
+    """Handle user registration form submission."""
     try:
-        # 创建用户数据对象（验证由create_user函数完成）
+        # Create a new user (validation is handled by create_user function)
         await create_user(db, username, password)
         
-        # 注册成功，重定向到登录页面
+        # Redirect to login page after successful registration
         return RedirectResponse(
             url="/auth/login", 
             status_code=302
         )
     except Exception as e:
-        # 获取错误信息
+        # Extract error message from exception
         error_message = str(e.detail) if hasattr(e, 'detail') else "Registration failed"
         
-        # 返回注册页面并显示错误
+        # Return registration page with error message and pre-filled username
         return templates.TemplateResponse(
             "register.html", 
             {
                 "request": request, 
                 "error": error_message,
-                "username": username  # 保留已输入的用户名
+                "username": username  # Keep the entered username for better UX
             }
         )
 
 
 @router.get("/login", response_class=HTMLResponse)
 async def login_page(request: Request):
-    """登录页面"""
+    """Render the user login page."""
     return templates.TemplateResponse("login.html", {"request": request})
 
 
 @router.post("/login")
 async def login_user(
     request: Request,
-    username: str = Form(...),
-    password: str = Form(...),
-    db: AsyncSession = Depends(get_db),
+    username: str = Form(...),# Username from form data
+
+    password: str = Form(...),# Password from form data
+
+    db: AsyncSession = Depends(get_db),# Database session dependency
 ):
-    """用户登录"""
+    """Handle user login form submission."""
     user = await authenticate_user(db, username, password)
+    # Authenticate user credentials
 
     if not user:
+        # Return login page with error if authentication fails
         return templates.TemplateResponse(
             "login.html",
             {
                 "request": request, 
                 "error": "Invalid username or password",
-                "username": username  # 保留已输入的用户名
+                "username": username  # Keep the entered username for better UX
             }
         )
 
-    # 设置session
+    # Store user info in session upon successful login
     request.session["user_id"] = str(user.id)
     request.session["username"] = user.username
     
+    # Redirect to home page after successful login
     return RedirectResponse(url="/", status_code=302)
 
 
 @router.get("/logout")
 async def logout(request: Request):
-    """用户注销"""
-    request.session.clear()
+    """Handle user logout by clearing session data."""
+    request.session.clear()# Clear all session data
     return RedirectResponse(url="/auth/login", status_code=302)

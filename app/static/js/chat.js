@@ -43,55 +43,55 @@ function setupWebSocketHandlers(roomId, userId) {
     socket.onmessage = (event) => {
         const data = event.data;
         
-        // 首先检查是否是纯文本的心跳消息
+        // First check whether this is a plain-text heartbeat response
         if (data === "PONG") {
-            return; // 忽略心跳响应
+            return; // ignore heartbeat response
         }
         
-        // 尝试解析JSON
+        // Try parsing JSON
         try {
             const jsonData = JSON.parse(data);
             
-            // 处理系统消息
+            // Handle system messages
             if (jsonData.type === "system" && jsonData.message) {
                 showSystemMessage(jsonData.message);
                 return;
             }
             
-            // 处理聊天消息
+            // Handle chat messages
             if (jsonData.type === "message" && jsonData.content) {
                 const isOwnMessage = jsonData.user_id === currentUserId;
                 addMessageToList(jsonData.username, jsonData.content, jsonData.created_at, isOwnMessage);
                 return;
             }
             
-            // 处理旧格式的消息（兼容）
+            // Handle legacy message format (compatibility)
             if (jsonData.content && jsonData.username) {
                 const isOwnMessage = jsonData.user_id === currentUserId;
                 addMessageToList(jsonData.username, jsonData.content, jsonData.created_at, isOwnMessage);
                 return;
             }
             
-            // 如果到这里，说明是未知格式的JSON，忽略它
+            // If we reach here the JSON format is unknown — ignore it
             console.log("Received unknown JSON format:", jsonData);
             
         } catch (error) {
-            // 不是JSON，检查是否是纯文本消息
+            // Not JSON — check if this is a plain-text message
             const text = data.trim();
             
             if (text === "") {
-                return; // 忽略空消息
+                return; // ignore empty messages
             }
             
             if (text.includes("heartbeat") || text.includes("HEARTBEAT") || text === "PONG") {
-                return; // 忽略心跳相关消息
+                return; // ignore heartbeat-related messages
             }
             
             if (text.includes("system") || text.includes("connected") || text.includes("disconnected")) {
-                return; // 忽略系统消息
+                return; // ignore system notifications
             }
             
-            // 如果是纯文本聊天消息
+            // It's a plain-text chat message
             console.log("Received plain text message:", text);
             addMessageToList("User", text, new Date().toISOString(), false);
         }
@@ -183,22 +183,22 @@ function sendMessage() {
     }
 
     try {
-        // 发送纯文本消息
+        // Send a plain-text message
         socket.send(content);
         
-        // 清空输入框
+        // Clear the input field
         messageInput.value = '';
         
-        // 重置按钮状态
+        // Reset the send button state
         if (sendButton) sendButton.disabled = true;
         
-        // 清空错误信息
+        // Clear error messages
         if (messageError) {
             messageError.textContent = '';
             messageError.classList.remove('error');
         }
         
-        // 自动聚焦输入框
+        // Auto-focus the input field
         messageInput.focus();
         
     } catch (error) {
@@ -213,7 +213,7 @@ function startHeartbeat() {
     
     heartbeatInterval = setInterval(() => {
         if (socket && socket.readyState === WS_STATE.OPEN) {
-            // 发送简单的心跳字符串
+            // Send a simple heartbeat string
             socket.send("PING");
         }
     }, 25000);
@@ -255,7 +255,7 @@ function addMessageToList(username, content, timestamp = null, isOwnMessage = fa
         });
     }
     
-    // 构建消息气泡
+    // Build message bubble
     let usernameHtml = '';
     if (isOwnMessage) {
         usernameHtml = `<strong class="message-username">You</strong>`;
@@ -313,7 +313,7 @@ function updateConnectionStatus(isConnected) {
     }
 }
 
-// 页面事件
+// Page event handlers
 document.addEventListener('keydown', function(e) {
     if (e.key === '/' && document.activeElement !== document.getElementById('messageInput')) {
         e.preventDefault();

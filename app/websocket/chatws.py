@@ -23,14 +23,17 @@ async def websocket_chat(
     db: AsyncSession = Depends(get_db),
 ):
     """
-    WebSocket聊天端点
-    
-    参数顺序：
-    1. websocket: WebSocket对象（无默认值）
-    2. room_id: 房间ID（无默认值）
-    3. db: 数据库会话（有默认值，使用Depends）
+    WebSocket Chat Endpoint
+
+    Parameter Order:
+
+    1. websocket: WebSocket object (no default value)
+
+    2. room_id: Room ID (no default value)
+
+    3. db: Database session (has a default value, use Depends)
     """
-    # 获取用户ID
+    # Get user ID
     user_id = websocket.query_params.get("user_id")
     
     if not user_id:
@@ -43,24 +46,24 @@ async def websocket_chat(
         await websocket.close(code=1008)
         return
 
-    # 验证用户
+    # Validate user
     result = await db.execute(select(User).where(User.id == user_uuid))
     user = result.scalars().first()
     if not user:
         await websocket.close(code=1008)
         return
 
-    # 连接管理器
+    # Connection manager
     await manager.connect(room_id, websocket)
     
-    # 发送欢迎消息给该用户
+    # Send a welcome message to the connected user
     await manager.send_personal_json(websocket, {
         "type": "system",
         "message": f"Welcome to the chat, {user.username}!",
         "timestamp": datetime.now().isoformat()
     })
     
-    # 通知其他用户有人加入
+    # Notify other users that someone has joined
     await manager.broadcast_json(room_id, {
         "type": "system",
         "message": f"{user.username} has joined the chat",
@@ -71,22 +74,22 @@ async def websocket_chat(
         while True:
             data = await websocket.receive_text()
             
-            # 更新活跃时间
+            # Update last active timestamp
             manager.update_activity(websocket)
             
-            # 处理心跳消息
+            # Handle heartbeat messages
             if data == "PING":
                 await websocket.send_text("PONG")
                 continue
             
-            # 跳过系统消息格式
+            # Skip system message formats
             if data.startswith("[System]") or data.startswith("{"):
                 continue
             
-            # 创建消息记录
+            # Create a message record
             msg = await create_message(db, room_id, user_id, data)
 
-            # 广播给所有用户
+            # Broadcast to all users
             broadcast_data = {
                 "type": "message",
                 "user_id": str(user.id),
@@ -100,7 +103,7 @@ async def websocket_chat(
     except WebSocketDisconnect:
         manager.disconnect(room_id, websocket)
         
-        # 通知其他用户有人离开
+        # Notify other users that someone has left
         await manager.broadcast_json(room_id, {
             "type": "system",
             "message": f"{user.username} has left the chat",

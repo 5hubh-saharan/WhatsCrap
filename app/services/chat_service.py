@@ -9,12 +9,14 @@ import uuid
 
 
 async def get_all_rooms(db: AsyncSession) -> List[ChatRoom]:
+    # Retrieve all chat rooms
     stmt = select(ChatRoom).order_by(ChatRoom.created_at)
     result = await db.execute(stmt)
     return result.scalars().all()
 
 
 async def get_room(db: AsyncSession, room_id: str) -> ChatRoom | None:
+    # Get specific chat room
     try:
         stmt = select(ChatRoom).where(ChatRoom.id == uuid.UUID(room_id))
         result = await db.execute(stmt)
@@ -24,12 +26,15 @@ async def get_room(db: AsyncSession, room_id: str) -> ChatRoom | None:
 
 
 async def create_room_service(db: AsyncSession, name: str) -> ChatRoom:
+    # Create a new chat room
     stmt = select(ChatRoom).where(ChatRoom.name == name)
     result = await db.execute(stmt)
     existing = result.scalars().first()
 
     if existing:
-        raise HTTPException(status_code=400, detail="Room name already exists")
+        raise HTTPException(
+            status_code=400, detail="Room name already exists")
+    # Create and persist the new chat room
 
     room = ChatRoom(name=name)
     db.add(room)
@@ -39,7 +44,9 @@ async def create_room_service(db: AsyncSession, name: str) -> ChatRoom:
 
 
 async def get_messages_for_room(db: AsyncSession, room_id: str) -> List[Message]:
+    # Retrieve messages for a specific chat room
     try:
+        # Build the query to get messages with user details
         stmt = (
             select(Message)
             .options(selectinload(Message.user))
@@ -53,7 +60,7 @@ async def get_messages_for_room(db: AsyncSession, room_id: str) -> List[Message]
 
 
 async def create_message(db: AsyncSession, room_id: str, user_id: str, content: str) -> Message:
-    # 验证消息内容
+    # Create a new message in a chat room
     if not content or len(content.strip()) == 0:
         raise HTTPException(status_code=400, detail="Message cannot be empty")
     
