@@ -9,8 +9,12 @@
 
 <ul id="messageList" class="message-list">
     {% for message in messages %}
-        <li>
-            <strong>{{ message.user.username }}</strong>: {{ message.content }}
+        <li class="message-item">
+            <div class="message-header">
+                <strong class="message-username">{{ message.user.username }}</strong>
+                <span class="message-time">{{ message.created_at.strftime('%H:%M') if message.created_at else '' }}</span>
+            </div>
+            <div class="message-content">{{ message.content }}</div>
         </li>
     {% endfor %}
 </ul>
@@ -19,10 +23,27 @@
 
 <h3>Send a Message</h3>
 
-<div>
-    <input id="messageInput" type="text" placeholder="Write your message..." required>
-    <button onclick="sendMessage()">Send</button>
-</div>
+<!-- 修改为form表单，支持回车发送 -->
+<form id="messageForm" class="message-form">
+    <div class="message-input-container">
+        <input 
+            id="messageInput" 
+            type="text" 
+            placeholder="Write your message and press Enter to send..." 
+            required
+            autocomplete="off"
+            autofocus
+        >
+        <button type="submit" id="sendButton" class="send-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+            <span class="button-text">Send</span>
+        </button>
+    </div>
+    <div id="messageError" class="field-error"></div>
+</form>
 
 <script src="/static/js/chat.js"></script>
 
@@ -31,6 +52,14 @@
     const roomId = "{{ room.id }}";
     const userId = "{{ request.session.get('user_id') }}";
     connectWebSocket(roomId, userId);
+    
+    // 添加键盘快捷键提示
+    document.addEventListener('keydown', function(e) {
+        if (e.key === '/' && document.activeElement !== document.getElementById('messageInput')) {
+            e.preventDefault();
+            document.getElementById('messageInput').focus();
+        }
+    });
 </script>
 
 {% endblock %}

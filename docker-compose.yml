@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: whatscrap
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@postgres/whatscrap
+      SECRET_KEY: your-secret-key-here-changeme123
+    depends_on:
+      - postgres
+    volumes:
+      - ./app:/app/app
+      - ./static:/app/static
+      - ./templates:/app/templates
+
+volumes:
+  postgres_data:

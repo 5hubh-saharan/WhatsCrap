@@ -28,7 +28,11 @@ async def list_rooms(
     rooms = await get_all_rooms(db)
     return templates.TemplateResponse(
         "rooms.html",
-        {"request": request, "rooms": rooms},
+        {
+            "request": request,
+            "rooms": rooms,
+            "username": request.session.get("username", "User")  # 添加用户名到上下文
+        },
     )
 
 
@@ -46,7 +50,12 @@ async def open_room(
     messages = await get_messages_for_room(db, room_id)
     return templates.TemplateResponse(
         "chatroom.html",
-        {"request": request, "room": room, "messages": messages},
+        {
+            "request": request,
+            "room": room,
+            "messages": messages,
+            "username": request.session.get("username", "User")  # 添加用户名到上下文
+        },
     )
 
 
@@ -63,7 +72,12 @@ async def create_room(
         rooms = await get_all_rooms(db)
         return templates.TemplateResponse(
             "rooms.html",
-            {"request": request, "rooms": rooms, "error": e.detail},
+            {
+                "request": request,
+                "rooms": rooms,
+                "error": e.detail,
+                "username": request.session.get("username", "User")
+            },
         )
 
     return RedirectResponse(url="/chat/rooms", status_code=302)

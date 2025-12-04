@@ -18,6 +18,7 @@ app.add_middleware(
     SessionMiddleware,
     secret_key=settings.SECRET_KEY,
     session_cookie="session_id",
+    max_age=3600,  # 1小时会话过期时间
 )
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")

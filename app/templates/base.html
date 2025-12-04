@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WhatsCrap</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
@@ -9,11 +10,17 @@
 <body>
     <nav class="navbar">
         <div class="nav-left">
-            <a href="/">WhatsCrap</a>
+            <a href="/" class="brand">WhatsCrap</a>
         </div>
         <div class="nav-right">
-            <a href="/chat/rooms">Rooms</a>
-            <a href="/auth/logout">Logout</a>
+            {% if request.session.get('user_id') %}
+                <span class="welcome-message">Welcome, {{ request.session.get('username', 'User') }}!</span>
+                <a href="/chat/rooms">Rooms</a>
+                <a href="/auth/logout" class="logout-btn">Logout</a>
+            {% else %}
+                <a href="/auth/login">Login</a>
+                <a href="/auth/register">Register</a>
+            {% endif %}
         </div>
     </nav>
 

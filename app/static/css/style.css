@@ -53,3 +53,156 @@ body {
 .message-list li {
     margin: 8px 0;
 }
+
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 12px;
+    border-radius: 4px;
+    margin: 15px 0;
+    border: 1px solid #f5c6cb;
+    font-size: 14px;
+}
+
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 12px;
+    border-radius: 4px;
+    margin: 15px 0;
+    border: 1px solid #c3e6cb;
+    font-size: 14px;
+}
+
+.info-message {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    padding: 12px;
+    border-radius: 4px;
+    margin: 15px 0;
+    border: 1px solid #bee5eb;
+    font-size: 14px;
+}
+
+.warning-message {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 12px;
+    border-radius: 4px;
+    margin: 15px 0;
+    border: 1px solid #ffeaa7;
+    font-size: 14px;
+}
+
+/* 字段错误样式 */
+.field-error {
+    color: #d32f2f;
+    font-size: 12px;
+    margin-top: 2px;
+    margin-bottom: 8px;
+    min-height: 16px;
+}
+
+.form-box input.error {
+    border-color: #d32f2f !important;
+    border-width: 2px !important;
+}
+
+.form-box input:focus.error {
+    outline-color: #d32f2f !important;
+}
+
+/* 表单改进 */
+.form-box {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.form-box input {
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.form-box input:focus {
+    outline: none;
+    border-color: #333;
+    box-shadow: 0 0 0 2px rgba(51, 51, 51, 0.2);
+}
+
+.form-box button {
+    padding: 12px 24px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background 0.3s ease;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.form-box button:hover {
+    background: #444;
+}
+
+/* 导航栏样式改进 */
+.navbar {
+    background: #222;
+    color: white;
+    padding: 12px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-left .brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-right a {
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.nav-right a:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-right .logout-btn {
+    background-color: #dc3545;
+}
+
+.nav-right .logout-btn:hover {
+    background-color: #c82333;
+}
+
+.welcome-message {
+    color: #ddd;
+    font-size: 14px;
+    margin-right: 10px;
+}

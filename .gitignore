@@ -12,3 +12,5 @@
 *.pyo
 *.pyd
 *.pyd
+#docker
+.yml
