@@ -1,9 +1,25 @@
+<!-- app/templates/chatroom.html -->
 {% extends "base.html" %}
 
 {% block content %}
 <h2>Room: {{ room.name }}</h2>
 
+<!-- 房间号显示区域，根据设置显示不同样式 -->
+{% set user_settings = request.session.get('user_settings', {}) %}
+{% set room_display = user_settings.get('room_display', 'bubble') %}
+
+{% if room_display == 'grid' %}
+<div class="room-id-display">
+    <div class="room-id-grid">
+        <div class="room-grid-item">
+            <div class="room-id">Room ID:</div>
+            <div class="room-name">{{ room.name }}</div>
+            <div class="room-created">Created: {{ room.created_at.strftime('%Y-%m-%d') if room.created_at else 'N/A' }}</div>
+        </div>
+    </div>
+</div>
 <hr>
+{% endif %}
 
 <h3>Messages:</h3>
 
@@ -11,6 +27,10 @@
     <ul id="messageList" class="message-list">
         {% for message in messages %}
             <li class="message-item {% if message.user_id|string == request.session.get('user_id') %}my-message{% else %}other-message{% endif %}">
+                {% if room_display == 'bubble' %}
+                <div class="bubble-room-id">Room: {{ room.name[:15] }}{% if room.name|length > 15 %}...{% endif %}</div>
+                {% endif %}
+                
                 <div class="message-bubble">
                     <div class="message-header">
                         {% if message.user_id|string != request.session.get('user_id') %}
@@ -60,7 +80,68 @@
     const roomId = "{{ room.id }}";
     const userId = "{{ request.session.get('user_id') }}";
     const username = "{{ request.session.get('username', 'User') }}";
-    connectWebSocket(roomId, userId, username);
+    
+    // 应用气泡颜色设置
+    function applyBubbleColors() {
+        const userSettings = JSON.parse(localStorage.getItem('user_settings') || '{}');
+        
+        if (userSettings.my_bubble_color) {
+            document.documentElement.style.setProperty('--my-bubble-color', userSettings.my_bubble_color);
+            const myBubbleGradient = `linear-gradient(135deg, ${userSettings.my_bubble_color} 0%, ${adjustColor(userSettings.my_bubble_color, -30)} 100%)`;
+            document.documentElement.style.setProperty('--my-bubble-gradient', myBubbleGradient);
+        }
+        
+        if (userSettings.other_bubble_color) {
+            document.documentElement.style.setProperty('--other-bubble-color', userSettings.other_bubble_color);
+            const otherBubbleGradient = `linear-gradient(135deg, ${userSettings.other_bubble_color} 0%, ${adjustColor(userSettings.other_bubble_color, -30)} 100%)`;
+            document.documentElement.style.setProperty('--other-bubble-gradient', otherBubbleGradient);
+        }
+        
+        // 更新现有气泡
+        updateBubbleStyles();
+    }
+    
+    function adjustColor(color, amount) {
+        const clamp = (value) => Math.min(255, Math.max(0, value));
+        
+        if (color.startsWith('#')) {
+            let r = parseInt(color.substring(1, 3), 16);
+            let g = parseInt(color.substring(3, 5), 16);
+            let b = parseInt(color.substring(5, 7), 16);
+            
+            r = clamp(r + amount);
+            g = clamp(g + amount);
+            b = clamp(b + amount);
+            
+            return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+        }
+        return color;
+    }
+    
+    function updateBubbleStyles() {
+        const myBubbles = document.querySelectorAll('.message-item.my-message .message-bubble');
+        const otherBubbles = document.querySelectorAll('.message-item.other-message .message-bubble');
+        
+        myBubbles.forEach(bubble => {
+            bubble.style.background = 'var(--my-bubble-gradient)';
+        });
+        
+        otherBubbles.forEach(bubble => {
+            bubble.style.background = 'var(--other-bubble-gradient)';
+        });
+    }
+    
+    // 页面加载时应用设置
+    document.addEventListener('DOMContentLoaded', function() {
+        applyBubbleColors();
+        connectWebSocket(roomId, userId, username);
+    });
+    
+    // 监听存储变化以实时更新
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'user_settings') {
+            applyBubbleColors();
+        }
+    });
 </script>
-
 {% endblock %}

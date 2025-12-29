@@ -22,16 +22,20 @@ async def register_page(request: Request):
 @router.post("/register")
 async def register_user(
     request: Request,
-    username: str = Form(...), # Username from form data
-
-    password: str = Form(...), # Password from form data
-
-    db: AsyncSession = Depends(get_db),# Database session dependency
+    username: str = Form(...),
+    password: str = Form(...),
+    db: AsyncSession = Depends(get_db),
 ):
     """Handle user registration form submission."""
     try:
         # Create a new user (validation is handled by create_user function)
-        await create_user(db, username, password)
+        user = await create_user(db, username, password)
+        
+        # 初始化用户设置
+        from app.services.settings_service import SettingsService
+        default_settings = SettingsService.get_default_settings()
+        request.session["user_settings"] = default_settings
+        request.session["app_background_color"] = default_settings["theme_color"]
         
         # Redirect to login page after successful registration
         return RedirectResponse(
@@ -48,10 +52,9 @@ async def register_user(
             {
                 "request": request, 
                 "error": error_message,
-                "username": username  # Keep the entered username for better UX
+                "username": username
             }
         )
-
 
 @router.get("/login", response_class=HTMLResponse)
 async def login_page(request: Request):

@@ -1,0 +1,199 @@
+<!-- app/templates/settings.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/css/settings.css">
+
+<div class="settings-container">
+    <h2>Settings</h2>
+    
+    {% if request.query_params.get('success') == 'true' %}
+    <div class="success-message">
+        {% if request.query_params.get('message') %}
+            {{ request.query_params.get('message') }}
+        {% else %}
+            Settings saved successfully!
+        {% endif %}
+    </div>
+    {% endif %}
+    
+    {% if error %}
+    <div class="error-message">
+        {{ error }}
+    </div>
+    {% endif %}
+    
+    <form id="settingsForm" action="/settings/save" method="post" class="settings-form">
+        <!-- 主题颜色设置 -->
+        <div class="setting-section">
+            <h3>Theme Colors</h3>
+            <div class="color-grid">
+                {% for color in [
+                    {'name': 'Light Gray', 'value': '#f5f5f5'},
+                    {'name': 'White', 'value': '#ffffff'},
+                    {'name': 'Dark Blue', 'value': '#252a34'},
+                    {'name': 'Green', 'value': '#59A52C'},
+                    {'name': 'Gray Blue', 'value': '#3a4252'},
+                    {'name': 'Dark Gray', 'value': '#101216'},
+                    {'name': 'Light Green', 'value': '#6fca3a'},
+                    {'name': 'Navy', 'value': '#1a1a2e'},
+                    {'name': 'Deep Blue', 'value': '#0f3460'},
+                    {'name': 'Alice Blue', 'value': '#f0f8ff'},
+                    {'name': 'Linen', 'value': '#faf0e6'},
+                    {'name': 'Sea Shell', 'value': '#fff5ee'},
+                    {'name': 'Purple', 'value': '#2c003e'},
+                    {'name': 'Dark Purple', 'value': '#1b1b2f'},
+                    {'name': 'Midnight', 'value': '#162447'}
+                ] %}
+                <div class="color-option">
+                    <input type="radio" name="theme_color" value="{{ color.value }}" 
+                           id="theme_{{ loop.index }}" 
+                           {% if settings.theme_color == color.value %}checked{% endif %}>
+                    <label for="theme_{{ loop.index }}" class="color-label">
+                        <span class="color-preview" style="background-color: {{ color.value }};"></span>
+                        <span class="color-name">{{ color.name }}</span>
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- 气泡颜色设置 -->
+        <div class="setting-section">
+            <h3>Bubble Colors</h3>
+            <div class="color-pair">
+                <div class="color-setting">
+                    <label for="my_bubble_color">My Bubble Color:</label>
+                    <div class="color-input-group">
+                        <input type="color" id="my_bubble_color" name="my_bubble_color" 
+                               value="{{ settings.my_bubble_color or '#667eea' }}">
+                        <input type="text" id="my_bubble_color_text" 
+                               value="{{ settings.my_bubble_color or '#667eea' }}" 
+                               class="color-text-input" 
+                               pattern="^#[0-9A-Fa-f]{6}$">
+                        <span class="color-value">{{ settings.my_bubble_color or '#667eea' }}</span>
+                    </div>
+                </div>
+                
+                <div class="color-setting">
+                    <label for="other_bubble_color">Other's Bubble Color:</label>
+                    <div class="color-input-group">
+                        <input type="color" id="other_bubble_color" name="other_bubble_color" 
+                               value="{{ settings.other_bubble_color or '#f5f7fa' }}">
+                        <input type="text" id="other_bubble_color_text" 
+                               value="{{ settings.other_bubble_color or '#f5f7fa' }}" 
+                               class="color-text-input" 
+                               pattern="^#[0-9A-Fa-f]{6}$">
+                        <span class="color-value">{{ settings.other_bubble_color or '#f5f7fa' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 房间号显示设置 -->
+        <div class="setting-section">
+            <h3>Room ID Display</h3>
+            <div class="display-options">
+                <div class="display-option">
+                    <input type="radio" name="room_display" value="bubble" 
+                           id="display_bubble" 
+                           {% if settings.room_display == 'bubble' or not settings.room_display %}checked{% endif %}>
+                    <label for="display_bubble" class="display-label">
+                        <div class="display-preview">
+                            <div class="bubble-preview">
+                                <span class="room-id-badge">Room #123</span>
+                                <div class="preview-bubble">
+                                    <div class="preview-header">User</div>
+                                    <div class="preview-content">Message content</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="display-name">In Bubble</span>
+                    </label>
+                </div>
+                
+                <div class="display-option">
+                    <input type="radio" name="room_display" value="grid" 
+                           id="display_grid" 
+                           {% if settings.room_display == 'grid' %}checked{% endif %}>
+                    <label for="display_grid" class="display-label">
+                        <div class="display-preview">
+                            <div class="grid-preview">
+                                <div class="room-grid">
+                                    <div class="grid-cell">Room #123</div>
+                                    <div class="grid-cell">Room #456</div>
+                                    <div class="grid-cell">Room #789</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="display-name">In Grid</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="save-btn">Save Settings</button>
+            <button type="button" class="reset-btn" onclick="resetSettings()">Reset to Default</button>
+            <button type="button" class="cancel-btn" onclick="window.history.back()">Cancel</button>
+        </div>
+    </form>
+</div>
+
+<script>
+// 颜色选择器同步
+document.getElementById('my_bubble_color').addEventListener('input', function(e) {
+    document.getElementById('my_bubble_color_text').value = e.target.value;
+    document.querySelector('.color-setting:nth-child(1) .color-value').textContent = e.target.value;
+});
+
+document.getElementById('my_bubble_color_text').addEventListener('input', function(e) {
+    if (e.target.value.match(/^#[0-9A-Fa-f]{6}$/)) {
+        document.getElementById('my_bubble_color').value = e.target.value;
+        document.querySelector('.color-setting:nth-child(1) .color-value').textContent = e.target.value;
+    }
+});
+
+document.getElementById('other_bubble_color').addEventListener('input', function(e) {
+    document.getElementById('other_bubble_color_text').value = e.target.value;
+    document.querySelector('.color-setting:nth-child(2) .color-value').textContent = e.target.value;
+});
+
+document.getElementById('other_bubble_color_text').addEventListener('input', function(e) {
+    if (e.target.value.match(/^#[0-9A-Fa-f]{6}$/)) {
+        document.getElementById('other_bubble_color').value = e.target.value;
+        document.querySelector('.color-setting:nth-child(2) .color-value').textContent = e.target.value;
+    }
+});
+
+// 重置设置
+function resetSettings() {
+    if (confirm('Are you sure you want to reset all settings to default?')) {
+        window.location.href = '/settings/reset';
+    }
+}
+
+// 表单提交验证
+document.getElementById('settingsForm').addEventListener('submit', function(e) {
+    const myColor = document.getElementById('my_bubble_color_text').value;
+    const otherColor = document.getElementById('other_bubble_color_text').value;
+    const colorRegex = /^#[0-9A-Fa-f]{6}$/;
+    
+    if (!colorRegex.test(myColor)) {
+        e.preventDefault();
+        alert('My bubble color must be a valid hex color (e.g., #FF0000)');
+        return;
+    }
+    
+    if (!colorRegex.test(otherColor)) {
+        e.preventDefault();
+        alert("Other's bubble color must be a valid hex color (e.g., #FF0000)");
+        return;
+    }
+    
+    // 更新隐藏的 color 输入值
+    document.getElementById('my_bubble_color').value = myColor;
+    document.getElementById('other_bubble_color').value = otherColor;
+});
+</script>
+{% endblock %}

@@ -1,0 +1,43 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: whatscrap
+      POSTGRES_PASSWORD: whatscrap123
+      POSTGRES_DB: whatscrap_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U whatscrap"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+asyncpg://whatscrap:whatscrap123@db:5432/whatscrap_db
+      SECRET_KEY: your-secret-key-change-this-in-production
+      ENVIRONMENT: production
+    volumes:
+      - ./app/static:/app/app/static
+      - ./app/templates:/app/app/templates
+      - ./logs:/app/logs
+    command: >
+      sh -c "alembic upgrade head && 
+             uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4"
+
+volumes:
+  postgres_data:

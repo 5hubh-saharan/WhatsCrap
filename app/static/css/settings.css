@@ -1,0 +1,472 @@
+/* app/static/css/settings.css */
+
+.settings-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.setting-section {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+body.dark-background .setting-section {
+    background-color: rgba(40, 40, 40, 0.9);
+}
+
+.color-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.color-option {
+    position: relative;
+}
+
+.color-option input[type="radio"] {
+    display: none;
+}
+
+.color-label {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: white;
+}
+
+.color-option input[type="radio"]:checked + .color-label {
+    border-color: #4a90e2;
+    background-color: rgba(74, 144, 226, 0.1);
+}
+
+.color-preview {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+}
+
+.color-name {
+    font-size: 14px;
+    color: #333;
+}
+
+body.dark-background .color-name {
+    color: #fff;
+}
+
+.color-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.color-setting {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.color-setting label {
+    font-weight: 600;
+    color: #333;
+}
+
+body.dark-background .color-setting label {
+    color: #fff;
+}
+
+.color-input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.color-setting input[type="color"] {
+    width: 50px;
+    height: 40px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 0;
+}
+
+.color-text-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 14px;
+    min-width: 0;
+}
+
+body.dark-background .color-text-input {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-color: #555;
+}
+
+.color-value {
+    font-family: monospace;
+    font-size: 14px;
+    color: #666;
+    padding: 5px 10px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    min-width: 80px;
+    text-align: center;
+}
+
+body.dark-background .color-value {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ccc;
+}
+
+.display-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.display-option {
+    position: relative;
+}
+
+.display-option input[type="radio"] {
+    display: none;
+}
+
+.display-label {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: white;
+    height: 100%;
+}
+
+.display-option input[type="radio"]:checked + .display-label {
+    border-color: #4a90e2;
+    background-color: rgba(74, 144, 226, 0.1);
+}
+
+.display-preview {
+    flex: 1;
+    margin-bottom: 10px;
+}
+
+.bubble-preview {
+    position: relative;
+    height: 100px;
+}
+
+.room-id-badge {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background-color: #4a90e2;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    z-index: 1;
+}
+
+.preview-bubble {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 18px;
+    max-width: 200px;
+    margin-top: 20px;
+}
+
+.preview-header {
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.preview-content {
+    font-size: 14px;
+}
+
+.grid-preview {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.room-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    width: 100%;
+}
+
+.grid-cell {
+    background-color: #f0f0f0;
+    padding: 8px;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 12px;
+    border: 1px solid #ddd;
+}
+
+body.dark-background .grid-cell {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: #555;
+    color: white;
+}
+
+.display-name {
+    text-align: center;
+    font-weight: 600;
+    color: #333;
+}
+
+body.dark-background .display-name {
+    color: #fff;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+    justify-content: center;
+}
+
+.save-btn {
+    padding: 12px 24px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.save-btn:hover {
+    background-color: #357ae8;
+}
+
+.reset-btn {
+    padding: 12px 24px;
+    background-color: #95a5a6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.reset-btn:hover {
+    background-color: #7f8c8d;
+}
+
+.cancel-btn {
+    padding: 12px 24px;
+    background-color: transparent;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.cancel-btn:hover {
+    background-color: #f5f5f5;
+}
+
+body.dark-background .cancel-btn {
+    color: #fff;
+    border-color: #555;
+}
+
+body.dark-background .cancel-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 12px 20px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    border: 1px solid #c3e6cb;
+}
+
+body.dark-background .success-message {
+    background-color: rgba(40, 167, 69, 0.2);
+    color: #98fb98;
+    border-color: rgba(40, 167, 69, 0.4);
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 12px 20px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    border: 1px solid #f5c6cb;
+}
+
+body.dark-background .error-message {
+    background-color: rgba(220, 53, 69, 0.2);
+    color: #ffb6c1;
+    border-color: rgba(220, 53, 69, 0.4);
+}
+
+@media (max-width: 768px) {
+    .color-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+    
+    .color-pair {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .display-options {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .color-input-group {
+        flex-wrap: wrap;
+    }
+}
+
+/* 在现有的 app/static/css/style.css 末尾添加 */
+
+/* CSS 变量用于气泡颜色 */
+:root {
+    --my-bubble-color: #667eea;
+    --my-bubble-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --other-bubble-color: #f5f7fa;
+    --other-bubble-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+/* 更新气泡样式使用 CSS 变量 */
+.message-item.my-message .message-bubble {
+    background: var(--my-bubble-gradient);
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.message-item.other-message .message-bubble {
+    background: var(--other-bubble-gradient);
+    color: #333;
+    border-bottom-left-radius: 4px;
+}
+
+body.dark-background .message-item.other-message .message-bubble {
+    background: var(--other-bubble-gradient);
+    color: #ffffff;
+}
+
+/* 气泡房间号样式 */
+.bubble-room-id {
+    position: absolute;
+    top: -8px;
+    left: 10px;
+    background-color: var(--my-bubble-color);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    z-index: 1;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.message-item.other-message .bubble-room-id {
+    background-color: var(--other-bubble-color);
+    color: #333;
+    left: auto;
+    right: 10px;
+}
+
+body.dark-background .message-item.other-message .bubble-room-id {
+    color: #fff;
+}
+
+/* 房间网格样式 */
+.room-id-display {
+    margin-bottom: 20px;
+}
+
+.room-id-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.room-grid-item {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+body.dark-background .room-grid-item {
+    background-color: rgba(40, 40, 40, 0.9);
+    border-color: #555;
+}
+
+.room-grid-item .room-id {
+    font-family: monospace;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+body.dark-background .room-grid-item .room-id {
+    color: #aaa;
+}
+
+.room-grid-item .room-name {
+    font-weight: 600;
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+body.dark-background .room-grid-item .room-name {
+    color: #fff;
+}
+
+.room-grid-item .room-created {
+    font-size: 12px;
+    color: #888;
+}
+
+body.dark-background .room-grid-item .room-created {
+    color: #bbb;
+}

@@ -700,3 +700,86 @@ body.dark-background .keyboard-hint kbd {
 .container, .form-box, .message-bubble, .chat-container {
     transition: all 0.3s ease;
 }
+
+/* 在现有的 app/static/css/style.css 文件中添加以下样式 */
+
+/* 气泡房间号样式 */
+.bubble-room-id {
+    position: absolute;
+    top: -8px;
+    left: 10px;
+    background-color: var(--my-bubble-color);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    z-index: 1;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.message-item.other-message .bubble-room-id {
+    background-color: var(--other-bubble-color);
+    color: #333;
+    left: auto;
+    right: 10px;
+}
+
+body.dark-background .message-item.other-message .bubble-room-id {
+    color: #fff;
+}
+
+/* 房间网格样式 */
+.room-id-display {
+    margin-bottom: 20px;
+}
+
+.room-id-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.room-grid-item {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+body.dark-background .room-grid-item {
+    background-color: rgba(40, 40, 40, 0.9);
+    border-color: #555;
+}
+
+.room-grid-item .room-id {
+    font-family: monospace;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+body.dark-background .room-grid-item .room-id {
+    color: #aaa;
+}
+
+.room-grid-item .room-name {
+    font-weight: 600;
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+body.dark-background .room-grid-item .room-name {
+    color: #fff;
+}
+
+.room-grid-item .room-created {
+    font-size: 12px;
+    color: #888;
+}
+
+body.dark-background .room-grid-item .room-created {
+    color: #bbb;
+}
