@@ -83,7 +83,7 @@ async def websocket_chat(
                 continue
             
             # Skip system message formats
-            if data.startswith("[System]") or data.startswith("{"):
+            if data.startswith("[System]"): # or data.startswith("{") 
                 continue
             
             # Create a message record
